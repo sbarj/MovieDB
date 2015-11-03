@@ -1,5 +1,7 @@
 package tk.sbarjola.pa.moviedb;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,13 +31,19 @@ public class MainActivityFragment extends Fragment {
     //GET Movie Popular http://api.themoviedb.org/3/movie/popular
     // Full URL http://api.themoviedb.org/3/movie/popular?api_key=a7ec645f7c4f6bffaab8a964820325f7
 
-    private MovieDbService service;
+    private MovieDbServicePopular servicePopular;
+    private MovieDbServiceTopRated serviceTopRated;
     ArrayAdapter<String> myAdapter; //Adaptador per al listView
     private ArrayList<String> items;    ///ArrayList amb els items **provisional
     private ListView listaPeliculas; //ListView on mostrarem els items
     private TextView misPeliculas;
     private String BaseURL = "http://api.themoviedb.org/3/movie/";
     private String apiKey = "a7ec645f7c4f6bffaab8a964820325f7";
+
+    private Retrofit retrofit = new Retrofit.Builder()  //Retrofit
+            .baseUrl(BaseURL)   //Primera parte de la url
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
 
     public MainActivityFragment() {
     }
@@ -78,13 +86,20 @@ public class MainActivityFragment extends Fragment {
 
     public void refresh(){
 
-        Retrofit retrofit = new Retrofit.Builder()  //Retrofit
-                .baseUrl(BaseURL)   //Primera parte de la url
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        service = retrofit.create(MovieDbService.class);    //
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if(settings.getString("ListaPeliculas", "0").equals("0")){
+            popular();
+        }
+        else if (settings.getString("ListaPeliculas", "1").equals("1")){
+            topRated();
+        }
 
-        Call<ListResult> llamada = (Call<ListResult>) service.pelispopulares(apiKey);
+    }
+    public void popular(){
+
+        servicePopular = retrofit.create(MovieDbServicePopular.class);    //
+
+        Call<ListResult> llamada = (Call<ListResult>) servicePopular.pelispopulares(apiKey);
             llamada.enqueue(new Callback<ListResult>() {
                 @Override
                 public void onResponse(Response<ListResult> response, Retrofit retrofit) {
@@ -104,6 +119,31 @@ public class MainActivityFragment extends Fragment {
 
                 }
             });
+    }
+
+    public void topRated(){
+        serviceTopRated = retrofit.create(MovieDbServiceTopRated.class);    //
+
+        Call<ListResult> llamada = (Call<ListResult>) serviceTopRated.pelisvaloradas(apiKey);
+        llamada.enqueue(new Callback<ListResult>() {
+            @Override
+            public void onResponse(Response<ListResult> response, Retrofit retrofit) {
+                ArrayList<String> arrayPeliculas = new ArrayList<String>(); // Fem un array on em
+                ListResult resultado = response.body();
+                for(Result list : resultado.getResults()){
+                    int id = list.getId();  // Demanem el ID de la pelicula
+                    String titulo = list.getTitle();    // Demanem el titol de la pelicula
+                    arrayPeliculas.add(String.valueOf(id) + " | " + titulo);    //Afegim al array el la id i el titol
+                }
+                myAdapter.clear();
+                myAdapter.addAll(arrayPeliculas);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -133,9 +173,15 @@ public class MainActivityFragment extends Fragment {
         return fragmentoLista;
     }
 
-    public interface MovieDbService{
+    public interface MovieDbServicePopular{
         @GET("popular")
         Call<ListResult> pelispopulares(
+                @Query("api_key") String api_key);
+    }
+
+    public interface MovieDbServiceTopRated{
+        @GET("top_rated")
+        Call<ListResult> pelisvaloradas(
                 @Query("api_key") String api_key);
     }
 }
