@@ -40,6 +40,8 @@ public class MainActivityFragment extends Fragment {
     private String BaseURL = "http://api.themoviedb.org/3/movie/";
     private String apiKey = "a7ec645f7c4f6bffaab8a964820325f7";
 
+    // Declarem el retrofit variable global per a que així puguem ferlo servir desde tots els metodes sense tornar-ho a definir
+
     private Retrofit retrofit = new Retrofit.Builder()  //Retrofit
             .baseUrl(BaseURL)   //Primera parte de la url
             .addConverterFactory(GsonConverterFactory.create())
@@ -49,11 +51,10 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
+    public void onStart() { //Que cada cop que s'obre l'activity s'actualitzi la llista
         super.onStart();
         refresh();
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,9 +85,10 @@ public class MainActivityFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    public void refresh(){
+    public void refresh(){  // El mètode refresh gestiona les preferencies. Segons les preferencies, cridarà al mètode popular o al mètode toprated
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         if(settings.getString("ListaPeliculas", "0").equals("0")){
             popular();
         }
@@ -95,15 +97,16 @@ public class MainActivityFragment extends Fragment {
         }
 
     }
-    public void popular(){
 
-        servicePopular = retrofit.create(MovieDbServicePopular.class);    //
+    public void popular(){  // Actualitza la llista amb el llistat de "populars"
+
+        servicePopular = retrofit.create(MovieDbServicePopular.class);
 
         Call<ListResult> llamada = (Call<ListResult>) servicePopular.pelispopulares(apiKey);
             llamada.enqueue(new Callback<ListResult>() {
                 @Override
                 public void onResponse(Response<ListResult> response, Retrofit retrofit) {
-                    ArrayList<String> arrayPeliculas = new ArrayList<String>(); // Fem un array on em
+                    ArrayList<String> arrayPeliculas = new ArrayList<String>(); // Fem un array on emmagatzenarem les pelicules
                     ListResult resultado = response.body();
                     for(Result list : resultado.getResults()){
                         int id = list.getId();  // Demanem el ID de la pelicula
@@ -121,14 +124,15 @@ public class MainActivityFragment extends Fragment {
             });
     }
 
-    public void topRated(){
+    public void topRated(){ // Actualitza la llista amb el llistat de "top rated"
+
         serviceTopRated = retrofit.create(MovieDbServiceTopRated.class);    //
 
         Call<ListResult> llamada = (Call<ListResult>) serviceTopRated.pelisvaloradas(apiKey);
         llamada.enqueue(new Callback<ListResult>() {
             @Override
             public void onResponse(Response<ListResult> response, Retrofit retrofit) {
-                ArrayList<String> arrayPeliculas = new ArrayList<String>(); // Fem un array on em
+                ArrayList<String> arrayPeliculas = new ArrayList<String>(); // Fem un array on emmagatzenarem les pelicules
                 ListResult resultado = response.body();
                 for(Result list : resultado.getResults()){
                     int id = list.getId();  // Demanem el ID de la pelicula
@@ -173,13 +177,13 @@ public class MainActivityFragment extends Fragment {
         return fragmentoLista;
     }
 
-    public interface MovieDbServicePopular{
+    public interface MovieDbServicePopular{ //Interficie per a la llista de popular
         @GET("popular")
         Call<ListResult> pelispopulares(
                 @Query("api_key") String api_key);
     }
 
-    public interface MovieDbServiceTopRated{
+    public interface MovieDbServiceTopRated{ //Interficie per a la llista de topRated
         @GET("top_rated")
         Call<ListResult> pelisvaloradas(
                 @Query("api_key") String api_key);
