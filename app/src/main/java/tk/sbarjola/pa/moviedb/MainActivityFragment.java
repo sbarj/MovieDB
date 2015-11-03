@@ -41,6 +41,13 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        refresh();
+    }
+
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);      //Aixo fa que mostri el menu. Com n'hi han fragments no grafics cal especificar-ho
@@ -97,7 +104,6 @@ public class MainActivityFragment extends Fragment {
 
                 }
             });
-
     }
 
     @Override
@@ -114,7 +120,8 @@ public class MainActivityFragment extends Fragment {
         myAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,items);  // Definim adaptador al layaout predefinit i al nostre array items
         listaPeliculas.setAdapter(myAdapter);    //Acoplem el adaptador
 
-        //afegim diverses entrades al ListView que apareixeran per defecte
+        //Afegim diverses entrades al ListView que apareixeran per defecte
+
         myAdapter.add("Kill Bill");
         myAdapter.add("Battle Royale");
         myAdapter.add("Robo Gueisha");
