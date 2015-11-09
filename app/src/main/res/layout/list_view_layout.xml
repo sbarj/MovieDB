@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="00/00/00"
+        android:id="@+id/diaSalida"
+        android:layout_gravity="right"
+        android:textSize="15dp"
+        android:layout_below="@+id/titulo"
+        android:layout_alignLeft="@+id/description"
+        android:layout_alignStart="@+id/description" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Puntuación"
+        android:id="@+id/puntuacion"
+        android:textSize="15dp"
+        android:layout_above="@+id/description"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Titulo"
+        android:id="@+id/titulo"
+        android:textSize="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/imagenPoster"
+        android:layout_toEndOf="@+id/imagenPoster" />
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="170dp"
+        android:id="@+id/imagenPoster"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/description"
+        android:layout_below="@+id/diaSalida"
+        android:layout_alignLeft="@+id/titulo"
+        android:layout_alignStart="@+id/titulo"
+        android:layout_alignBottom="@+id/imagenPoster"
+        android:layout_alignRight="@+id/puntuacion"
+        android:layout_alignEnd="@+id/puntuacion" />
+
+</RelativeLayout>
