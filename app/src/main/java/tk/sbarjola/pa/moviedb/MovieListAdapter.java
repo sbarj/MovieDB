@@ -5,7 +5,7 @@ package tk.sbarjola.pa.moviedb;
  */
 
 import android.content.Context;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class MovieListAdapter extends ArrayAdapter<Result> {
+public class MovieListAdapter extends ArrayAdapter<Result> implements Serializable{
 
     final private String posterUrl = "http://image.tmdb.org/t/p/";
     final private String posterSize = "w185";
@@ -40,18 +41,27 @@ public class MovieListAdapter extends ArrayAdapter<Result> {
         }
 
     // Asociamos cada variable a su elemento del layout
-        TextView titulo = (TextView) convertView.findViewById(R.id.titulo);
-        TextView puntuacion = (TextView) convertView.findViewById(R.id.puntuacion);
-        TextView diaSalida = (TextView) convertView.findViewById(R.id.diaSalida);
+        TextView titulo = (TextView) convertView.findViewById(R.id.tituloDetails);
+        TextView puntuacion = (TextView) convertView.findViewById(R.id.puntuacionDetails);
+        TextView diaSalida = (TextView) convertView.findViewById(R.id.diaSalidaDetails);
         ImageView imagenPoster = (ImageView) convertView.findViewById(R.id.imagenPoster);
         TextView description = (TextView) convertView.findViewById(R.id.description);
 
     // Incorporamos los objetos al layout
-        titulo.setText("  " + pelicula.getTitle());
+        titulo.setText(pelicula.getTitle());
         puntuacion.setText(oneDecimalOnly.format(pelicula.getPopularity()) + "%");
-        diaSalida.setText("  " + pelicula.getReleaseDate());
+        diaSalida.setText(pelicula.getReleaseDate());
+
+        /*  //Fragmento para dejar el listView más ordenado y no descuadrarlo
+        if(titulo.getLineCount() > 1){
+            description.setMaxLines(7);
+            description.setEllipsize(TextUtils.TruncateAt.END);
+        }*/
+
         description.setText(pelicula.getOverview());
         Picasso.with(getContext()).load(posterUrl + posterSize + pelicula.getPosterPath()).fit().into(imagenPoster);
+
+
 
         return convertView; //Devolvemos la view ya rellena
     }

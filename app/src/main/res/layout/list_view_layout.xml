@@ -8,10 +8,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="00/00/00"
-        android:id="@+id/diaSalida"
+        android:id="@+id/diaSalidaDetails"
         android:layout_gravity="right"
         android:textSize="15dp"
-        android:layout_below="@+id/titulo"
+        android:layout_below="@+id/tituloDetails"
         android:layout_alignLeft="@+id/description"
         android:layout_alignStart="@+id/description" />
 
@@ -20,19 +20,23 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Puntuación"
-        android:id="@+id/puntuacion"
+        android:id="@+id/puntuacionDetails"
         android:textSize="15dp"
-        android:layout_above="@+id/description"
+        android:layout_alignTop="@+id/diaSalidaDetails"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Titulo"
-        android:id="@+id/titulo"
+        android:id="@+id/tituloDetails"
         android:textSize="20dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/imagenPoster"
         android:layout_toEndOf="@+id/imagenPoster" />
@@ -43,18 +47,19 @@
         android:id="@+id/imagenPoster"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="11dp" />
 
     <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="146dp"
         android:text="New Text"
         android:id="@+id/description"
-        android:layout_below="@+id/diaSalida"
-        android:layout_alignLeft="@+id/titulo"
-        android:layout_alignStart="@+id/titulo"
-        android:layout_alignBottom="@+id/imagenPoster"
-        android:layout_alignRight="@+id/puntuacion"
-        android:layout_alignEnd="@+id/puntuacion" />
+        android:maxLines="8"
+        android:layout_below="@+id/diaSalidaDetails"
+        android:layout_alignRight="@+id/puntuacionDetails"
+        android:layout_alignEnd="@+id/puntuacionDetails"
+        android:layout_alignLeft="@+id/tituloDetails"
+        android:layout_alignStart="@+id/tituloDetails" />
 
 </RelativeLayout>

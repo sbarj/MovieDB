@@ -4,12 +4,13 @@ package tk.sbarjola.pa.moviedb;
  * Created by 46465442z on 27/10/15.
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result {
+public class Result implements Serializable{
 
     @SerializedName("adult")
     @Expose
