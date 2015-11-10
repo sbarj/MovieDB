@@ -41,9 +41,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         TextView description = (TextView) findViewById(R.id.descripcionDetails);
         TextView idioma = (TextView) findViewById(R.id.idiomaPeliculaDetails);
         TextView adultos = (TextView) findViewById(R.id.adultDetails);
+        TextView tituloOriginal = (TextView) findViewById(R.id.tituloOriginalDetails);
 
         // Incorporamos los objetos al layout
-        titulo.setText("  " + pelicula.getTitle());
+        titulo.setText(" " + pelicula.getTitle());
+        tituloOriginal.setText("  (" + pelicula.getOriginalTitle() + ")");
         puntuacion.setText("  Puntuación: " + oneDecimalOnly.format(pelicula.getPopularity()) + "%");
         idioma.setText("  Idioma : " + pelicula.getOriginalLanguage());
         diaSalida.setText("  Estreno : " + pelicula.getReleaseDate());

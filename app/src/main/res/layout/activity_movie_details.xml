@@ -31,10 +31,10 @@
         android:text="Puntuacion"
         android:id="@+id/puntuacionDetails"
         android:textIsSelectable="false"
-        android:textSize="16dp"
-        android:layout_below="@+id/adultDetails"
-        android:layout_alignLeft="@+id/adultDetails"
-        android:layout_alignStart="@+id/adultDetails" />
+        android:textSize="15dp"
+        android:layout_below="@+id/idiomaPeliculaDetails"
+        android:layout_toRightOf="@+id/peliculaPosterDetails"
+        android:layout_toEndOf="@+id/peliculaPosterDetails" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,9 +43,9 @@
         android:text="Fecha"
         android:id="@+id/diaSalidaDetails"
         android:textSize="15dp"
-        android:layout_below="@+id/tituloDetails"
-        android:layout_alignLeft="@+id/tituloDetails"
-        android:layout_alignStart="@+id/tituloDetails" />
+        android:layout_below="@+id/tituloOriginalDetails"
+        android:layout_toRightOf="@+id/peliculaPosterDetails"
+        android:layout_toEndOf="@+id/peliculaPosterDetails" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -55,8 +55,8 @@
         android:id="@+id/idiomaPeliculaDetails"
         android:textSize="15dp"
         android:layout_below="@+id/diaSalidaDetails"
-        android:layout_alignLeft="@+id/diaSalidaDetails"
-        android:layout_alignStart="@+id/diaSalidaDetails" />
+        android:layout_toRightOf="@+id/peliculaPosterDetails"
+        android:layout_toEndOf="@+id/peliculaPosterDetails" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -78,8 +78,20 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Todos los públicos: "
         android:id="@+id/adultDetails"
-        android:layout_below="@+id/idiomaPeliculaDetails"
-        android:layout_alignLeft="@+id/idiomaPeliculaDetails"
-        android:layout_alignStart="@+id/idiomaPeliculaDetails"
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        android:layout_below="@+id/puntuacionDetails"
+        android:layout_toRightOf="@+id/peliculaPosterDetails"
+        android:layout_toEndOf="@+id/peliculaPosterDetails" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Titulo Original"
+        android:id="@+id/tituloOriginalDetails"
+        android:textSize="15dp"
+        android:layout_below="@+id/tituloDetails"
+        android:layout_toRightOf="@+id/peliculaPosterDetails"
+        android:layout_toEndOf="@+id/peliculaPosterDetails" />
+
 </RelativeLayout>
