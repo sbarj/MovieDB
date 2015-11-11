@@ -12,11 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import retrofit.Call;
 import retrofit.Callback;
@@ -145,13 +142,13 @@ public class MainActivityFragment extends Fragment {
         items = new ArrayList<>();     //array list que contindrà les pel·licules
         misPeliculas = (TextView) fragmentoLista.findViewById(R.id.misPeliculas);  //Asignem el ID
         listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);    //Asignme el id
-        myAdapter = new MovieListAdapter(getContext(), 0,items);  // Definim adaptador al layaout predefinit i al nostre array items
+        myAdapter = new MovieListAdapter(getContext(), 0, items);  // Definim adaptador al layaout predefinit i al nostre array items
         listaPeliculas.setAdapter(myAdapter);    //Acoplem el adaptador
 
         listaPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Result selectedFilm = (Result) parent.getItemAtPosition(position);
-                Intent detallesPeliculas = new Intent(getContext(), MovieDetailsActivity.class);
+                Intent detallesPeliculas = new Intent(getContext(), DetailsActivty.class);
                 detallesPeliculas.putExtra("pelicula", selectedFilm);
                 startActivity(detallesPeliculas);
             }

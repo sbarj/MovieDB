@@ -35,11 +35,11 @@
         android:text="Titulo"
         android:id="@+id/tituloDetails"
         android:textSize="20dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/imagenPoster"
         android:layout_toRightOf="@+id/imagenPoster"
-        android:layout_toEndOf="@+id/imagenPoster" />
+        android:layout_toEndOf="@+id/imagenPoster"
+        android:layout_marginLeft="7dp"
+        android:layout_marginStart="7dp" />
 
     <ImageView
         android:layout_width="110dp"

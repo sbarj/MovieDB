@@ -29,8 +29,9 @@
                 android:value="tk.sbarjola.pa.moviedb.MainActivity" />
         </activity>
         <activity
-            android:name=".MovieDetailsActivity"
-            android:label="@string/title_activity_movie_details" >
+            android:name=".DetailsActivty"
+            android:label="@string/title_activity_details_activty"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 
