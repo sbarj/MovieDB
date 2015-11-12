@@ -20,6 +20,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);   // necesario para referenciar y leer la configuración del programa
+
+        // Según como esté configurado el programa lee de las preferncias y muestra un titulo en el Toolbar u otro
+        /* IMPORTANTE: SOLO funcionará mientras la gestión de categorías pase por las preferencias.*/
+
+        if(settings.getString("ListaPeliculas", "0").equals("0")){
+            toolbar.setTitle("MovieDB - Populares");
+        }
+        else if (settings.getString("ListaPeliculas", "1").equals("1")){
+            toolbar.setTitle("MovieDB - Top Rated");
+        }
+        else{
+            toolbar.setTitle("MovieDB");
+        }
+
         setSupportActionBar(toolbar);
     }
 
