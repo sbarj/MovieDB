@@ -3,9 +3,19 @@
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+
+    <ListPreference
+        android:key="VistaScreen"
+        android:title="Vista predefinidida"
+        android:defaultValue="0"
+        android:entries="@array/vista_pantalla"
+        android:entryValues="@array/vista_valor"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null" />
+
     <ListPreference
         android:key="ListaPeliculas"
-        android:title="Lista de peliculas"
+        android:title="Categoría predefinida"
         android:defaultValue="0"
         android:entries="@array/peliculas_lista"
         android:entryValues="@array/peliculas_valor"

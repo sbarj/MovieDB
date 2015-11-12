@@ -98,6 +98,17 @@ public class MainActivityFragment extends Fragment {
         else if (settings.getString("ListaPeliculas", "1").equals("1")){
             topRated();
         }
+
+        if(settings.getString("VistaScreen", "0").equals("0")){
+            gridPeliculas.setVisibility(View.INVISIBLE);
+            listaPeliculas.setVisibility(View.VISIBLE);
+            listaVisible = true;
+        }
+        else if (settings.getString("VistaScreen", "1").equals("1")){
+            listaPeliculas.setVisibility(View.GONE);
+            gridPeliculas.setVisibility(View.VISIBLE);
+            listaVisible = false;
+        }
     }
 
     public void popular(){  // Actualitza la llista amb el llistat de "populars"
@@ -149,20 +160,12 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState){
 
         View fragmentoLista = inflater.inflate(R.layout.fragment_main, container, false);    //Definimos el fragment
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
 
         items = new ArrayList<>();     //array list que contindrà les pel·licules
         misPeliculas = (TextView) fragmentoLista.findViewById(R.id.misPeliculas);  //Asignem el ID
         listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);    //Asignme el id
         gridPeliculas = (GridView) fragmentoLista.findViewById(R.id.gridPeliculas);
-
-        if(listaVisible == false){
-            listaPeliculas.setVisibility(View.GONE);
-            gridPeliculas.setVisibility(View.VISIBLE);
-        }
-        else{
-            gridPeliculas.setVisibility(View.INVISIBLE);
-            listaPeliculas.setVisibility(View.VISIBLE);
-        }
 
         myGridAdapter = new MovieGridAdapter(getContext(), 0, items);
         gridPeliculas.setAdapter(myGridAdapter);
