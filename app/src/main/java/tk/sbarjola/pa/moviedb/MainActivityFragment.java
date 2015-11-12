@@ -61,7 +61,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);      //Aixo fa que mostri el menu. Com n'hi han fragments no grafics cal especificar-ho
+        setHasOptionsMenu(true);    //Aixo fa que mostri el menu. Com n'hi han fragments no grafics cal especificar-ho
     }
 
     @Override
@@ -91,26 +91,13 @@ public class MainActivityFragment extends Fragment {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
 
-        // Aquí gestiona qué peliculas va a mostrar
+        // Aquí gestiona que categoria de peliculas va a mostrar
 
         if(settings.getString("ListaPeliculas", "0").equals("0")){
             popular();
         }
         else if (settings.getString("ListaPeliculas", "1").equals("1")){
             topRated();
-        }
-
-        // Y en esta sección CÓMO las va a mostrar
-
-        if(settings.getString("VistaScreen", "0").equals("0")){
-            gridPeliculas.setVisibility(View.INVISIBLE);
-            listaPeliculas.setVisibility(View.VISIBLE);
-            listaVisible = true;
-        }
-        else if (settings.getString("VistaScreen", "1").equals("1")){
-            listaPeliculas.setVisibility(View.GONE);
-            gridPeliculas.setVisibility(View.VISIBLE);
-            listaVisible = false;
         }
     }
 
@@ -138,7 +125,7 @@ public class MainActivityFragment extends Fragment {
 
     public void topRated(){ // Actualitza la llista amb el llistat de "top rated"
 
-        serviceTopRated = retrofit.create(MovieDbServiceTopRated.class);    //
+        serviceTopRated = retrofit.create(MovieDbServiceTopRated.class);
 
         Call<ListResult> llamada = (Call<ListResult>) serviceTopRated.pelisvaloradas(apiKey);
         llamada.enqueue(new Callback<ListResult>(){
@@ -165,7 +152,7 @@ public class MainActivityFragment extends Fragment {
         View fragmentoLista = inflater.inflate(R.layout.fragment_main, container, false);    //Definimos el fragment
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
 
-        //ActionBar
+        //ActionBar que muestra y oculta el listView y el gridView para cambiar como se muestran las peliculas
         fab = (FloatingActionButton) fragmentoLista.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,8 +180,21 @@ public class MainActivityFragment extends Fragment {
         myListAdapter = new MovieListAdapter(getContext(), 0, items);  // Definim adaptador al layaout predefinit i al nostre array items
         listaPeliculas.setAdapter(myListAdapter);    //Acoplem el adaptador
 
+        // Gestionamos que vista va a mostrar la APP
+
+        if(settings.getString("VistaScreen", "0").equals("0")){
+            gridPeliculas.setVisibility(View.INVISIBLE);
+            listaPeliculas.setVisibility(View.VISIBLE);
+            listaVisible = true;
+        }
+        else if (settings.getString("VistaScreen", "1").equals("1")){
+            listaPeliculas.setVisibility(View.GONE);
+            gridPeliculas.setVisibility(View.VISIBLE);
+            listaVisible = false;
+        }
+
         listaPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  //Listener para el list
                 Result selectedFilm = (Result) parent.getItemAtPosition(position);
                 Intent detallesPeliculas = new Intent(getContext(), DetailsActivty.class);
                 detallesPeliculas.putExtra("pelicula", selectedFilm);
@@ -203,7 +203,7 @@ public class MainActivityFragment extends Fragment {
         });
 
         gridPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  //Listener para el grid
                 Result selectedFilm = (Result) parent.getItemAtPosition(position);
                 Intent detallesPeliculas = new Intent(getContext(), DetailsActivty.class);
                 detallesPeliculas.putExtra("pelicula", selectedFilm);
