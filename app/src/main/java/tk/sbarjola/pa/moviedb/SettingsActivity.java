@@ -1,6 +1,5 @@
 package tk.sbarjola.pa.moviedb;
 
-
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;

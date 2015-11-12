@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);   // necesario para referenciar y leer la configuración del programa
 
         // Según como esté configurado el programa lee de las preferncias y muestra un titulo en el Toolbar u otro
-        /* IMPORTANTE: SOLO funcionará mientras la gestión de categorías pase por las preferencias.*/
+        /* IMPORTANTE: SOLO funcionara mientras la gestion de categorias pase por las preferencias.*/
 
         if(settings.getString("ListaPeliculas", "0").equals("0")){
             toolbar.setTitle("MovieDB - Populares");
