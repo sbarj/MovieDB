@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Titulo"
-                android:id="@+id/tituloDetails"
+                android:id="@+id/list_titulo"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/peliculaPosterDetails"
                 android:layout_toEndOf="@+id/peliculaPosterDetails"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Puntuacion"
-                android:id="@+id/puntuacionDetails"
+                android:id="@+id/list_puntuacion"
                 android:textIsSelectable="false"
                 android:textSize="15dp"
                 android:layout_below="@+id/idiomaPeliculaDetails"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Fecha"
-                android:id="@+id/diaSalidaDetails"
+                android:id="@+id/list_diaSalida"
                 android:textSize="15dp"
                 android:layout_marginTop="21dp"
                 android:layout_below="@+id/tituloOriginalDetails"
@@ -74,7 +74,7 @@
                 android:text="Idioma"
                 android:id="@+id/idiomaPeliculaDetails"
                 android:textSize="15dp"
-                android:layout_below="@+id/diaSalidaDetails"
+                android:layout_below="@+id/list_diaSalida"
                 android:layout_toRightOf="@+id/peliculaPosterDetails"
                 android:layout_toEndOf="@+id/peliculaPosterDetails" />
 
@@ -99,7 +99,7 @@
                 android:text="Todos los públicos: "
                 android:id="@+id/adultDetails"
                 android:textSize="15dp"
-                android:layout_below="@+id/puntuacionDetails"
+                android:layout_below="@+id/list_puntuacion"
                 android:layout_toRightOf="@+id/peliculaPosterDetails"
                 android:layout_toEndOf="@+id/peliculaPosterDetails" />
 
@@ -110,7 +110,7 @@
                 android:text="Titulo Original"
                 android:id="@+id/tituloOriginalDetails"
                 android:textSize="12dp"
-                android:layout_below="@+id/tituloDetails"
+                android:layout_below="@+id/list_titulo"
                 android:layout_toRightOf="@+id/peliculaPosterDetails"
                 android:layout_toEndOf="@+id/peliculaPosterDetails" />
 

@@ -3,6 +3,7 @@ package tk.sbarjola.pa.moviedb;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
@@ -29,11 +31,14 @@ public class MainActivityFragment extends Fragment {
     // GET Movie Popular http://api.themoviedb.org/3/movie/popular
     // Full URL http://api.themoviedb.org/3/movie/popular?api_key=a7ec645f7c4f6bffaab8a964820325f7
 
+    public boolean listaVisible = false;
     private MovieDbServicePopular servicePopular;   // Interfaz para las peliculas populares
     private MovieDbServiceTopRated serviceTopRated; // Interfaz para las peliculas mejor valoradas
-    MovieListAdapter myAdapter;      //Adaptador per al listView
+    MovieListAdapter myListAdapter;      //Adaptador per al listView
+    MovieGridAdapter myGridAdapter;
     private ArrayList<Result> items; ///ArrayList amb els items **provisional
     private ListView listaPeliculas; //ListView on mostrarem els items
+    private GridView gridPeliculas;
     private TextView misPeliculas;
     private String BaseURL = "http://api.themoviedb.org/3/movie/";  //Principio de la URL que usará retrofit
     private String apiKey = "a7ec645f7c4f6bffaab8a964820325f7"; // Key de MovieDB
@@ -105,8 +110,11 @@ public class MainActivityFragment extends Fragment {
                 public void onResponse(Response<ListResult> response, Retrofit retrofit) {
                     ListResult resultado = response.body();
 
-                    myAdapter.clear();
-                    myAdapter.addAll(resultado.getResults());
+                    myGridAdapter.clear();
+                    myGridAdapter.addAll(resultado.getResults());
+
+                    myListAdapter.clear();
+                    myListAdapter.addAll(resultado.getResults());
                 }
 
                 @Override
@@ -124,8 +132,11 @@ public class MainActivityFragment extends Fragment {
             public void onResponse(Response<ListResult> response, Retrofit retrofit) {
                 ListResult resultado = response.body();
 
-                myAdapter.clear();
-                myAdapter.addAll(resultado.getResults());
+                myGridAdapter.clear();
+                myGridAdapter.addAll(resultado.getResults());
+
+                myListAdapter.clear();
+                myListAdapter.addAll(resultado.getResults());
             }
 
             @Override
@@ -142,8 +153,22 @@ public class MainActivityFragment extends Fragment {
         items = new ArrayList<>();     //array list que contindrà les pel·licules
         misPeliculas = (TextView) fragmentoLista.findViewById(R.id.misPeliculas);  //Asignem el ID
         listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);    //Asignme el id
-        myAdapter = new MovieListAdapter(getContext(), 0, items);  // Definim adaptador al layaout predefinit i al nostre array items
-        listaPeliculas.setAdapter(myAdapter);    //Acoplem el adaptador
+        gridPeliculas = (GridView) fragmentoLista.findViewById(R.id.gridPeliculas);
+
+        if(listaVisible == false){
+            listaPeliculas.setVisibility(View.GONE);
+            gridPeliculas.setVisibility(View.VISIBLE);
+        }
+        else{
+            gridPeliculas.setVisibility(View.INVISIBLE);
+            listaPeliculas.setVisibility(View.VISIBLE);
+        }
+
+        myGridAdapter = new MovieGridAdapter(getContext(), 0, items);
+        gridPeliculas.setAdapter(myGridAdapter);
+
+        myListAdapter = new MovieListAdapter(getContext(), 0, items);  // Definim adaptador al layaout predefinit i al nostre array items
+        listaPeliculas.setAdapter(myListAdapter);    //Acoplem el adaptador
 
         listaPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -151,6 +176,32 @@ public class MainActivityFragment extends Fragment {
                 Intent detallesPeliculas = new Intent(getContext(), DetailsActivty.class);
                 detallesPeliculas.putExtra("pelicula", selectedFilm);
                 startActivity(detallesPeliculas);
+            }
+        });
+
+        gridPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Result selectedFilm = (Result) parent.getItemAtPosition(position);
+                Intent detallesPeliculas = new Intent(getContext(), DetailsActivty.class);
+                detallesPeliculas.putExtra("pelicula", selectedFilm);
+                startActivity(detallesPeliculas);
+            }
+        });
+
+        //ActionBar
+        FloatingActionButton fab = (FloatingActionButton) fragmentoLista.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listaVisible == false) {
+                    gridPeliculas.setVisibility(View.GONE);
+                    listaPeliculas.setVisibility(View.VISIBLE);
+                    listaVisible = true;
+                } else {
+                    listaPeliculas.setVisibility(View.GONE);
+                    gridPeliculas.setVisibility(View.VISIBLE);
+                    listaVisible = false;
+                }
             }
         });
 

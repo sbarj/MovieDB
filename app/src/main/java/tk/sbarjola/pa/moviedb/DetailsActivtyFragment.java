@@ -41,9 +41,9 @@ public class DetailsActivtyFragment extends Fragment {
         }
 
         // Asociamos cada variable a su elemento del layout
-        TextView titulo = (TextView) fragmentoDetails.findViewById(R.id.tituloDetails);
-        TextView puntuacion = (TextView) fragmentoDetails.findViewById(R.id.puntuacionDetails);
-        TextView diaSalida = (TextView) fragmentoDetails.findViewById(R.id.diaSalidaDetails);
+        TextView titulo = (TextView) fragmentoDetails.findViewById(R.id.list_titulo);
+        TextView puntuacion = (TextView) fragmentoDetails.findViewById(R.id.list_puntuacion);
+        TextView diaSalida = (TextView) fragmentoDetails.findViewById(R.id.list_diaSalida);
         ImageView imagenPoster = (ImageView) fragmentoDetails.findViewById(R.id.peliculaPosterDetails);
         TextView description = (TextView) fragmentoDetails.findViewById(R.id.descripcionDetails);
         TextView idioma = (TextView) fragmentoDetails.findViewById(R.id.idiomaPeliculaDetails);
