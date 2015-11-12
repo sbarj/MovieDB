@@ -2,6 +2,7 @@ package tk.sbarjola.pa.moviedb;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Icon;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -31,14 +32,15 @@ public class MainActivityFragment extends Fragment {
     // GET Movie Popular http://api.themoviedb.org/3/movie/popular
     // Full URL http://api.themoviedb.org/3/movie/popular?api_key=a7ec645f7c4f6bffaab8a964820325f7
 
+    public FloatingActionButton fab;
     public boolean listaVisible = false;
     private MovieDbServicePopular servicePopular;   // Interfaz para las peliculas populares
     private MovieDbServiceTopRated serviceTopRated; // Interfaz para las peliculas mejor valoradas
-    MovieListAdapter myListAdapter;      //Adaptador per al listView
-    MovieGridAdapter myGridAdapter;
+    MovieListAdapter myListAdapter;  //Adaptador per al listView
+    MovieGridAdapter myGridAdapter;  //Adaptador per al gridView
     private ArrayList<Result> items; ///ArrayList amb els items **provisional
     private ListView listaPeliculas; //ListView on mostrarem els items
-    private GridView gridPeliculas;
+    private GridView gridPeliculas;  //GridView on mostrarem els items
     private TextView misPeliculas;
     private String BaseURL = "http://api.themoviedb.org/3/movie/";  //Principio de la URL que usará retrofit
     private String apiKey = "a7ec645f7c4f6bffaab8a964820325f7"; // Key de MovieDB
@@ -49,9 +51,6 @@ public class MainActivityFragment extends Fragment {
             .baseUrl(BaseURL)   //Primera parte de la url
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-
-    public MainActivityFragment(){
-    }
 
     @Override
     public void onStart() { //Que cada cop que s'obre l'activity s'actualitzi la llista
@@ -92,12 +91,16 @@ public class MainActivityFragment extends Fragment {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
 
+        // Aquí gestiona qué peliculas va a mostrar
+
         if(settings.getString("ListaPeliculas", "0").equals("0")){
             popular();
         }
         else if (settings.getString("ListaPeliculas", "1").equals("1")){
             topRated();
         }
+
+        // Y en esta sección CÓMO las va a mostrar
 
         if(settings.getString("VistaScreen", "0").equals("0")){
             gridPeliculas.setVisibility(View.INVISIBLE);
@@ -162,6 +165,23 @@ public class MainActivityFragment extends Fragment {
         View fragmentoLista = inflater.inflate(R.layout.fragment_main, container, false);    //Definimos el fragment
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
 
+        //ActionBar
+        fab = (FloatingActionButton) fragmentoLista.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listaVisible == false) {
+                    gridPeliculas.setVisibility(View.GONE);
+                    listaPeliculas.setVisibility(View.VISIBLE);
+                    listaVisible = true;
+                } else {
+                    listaPeliculas.setVisibility(View.GONE);
+                    gridPeliculas.setVisibility(View.VISIBLE);
+                    listaVisible = false;
+                }
+            }
+        });
+
         items = new ArrayList<>();     //array list que contindrà les pel·licules
         misPeliculas = (TextView) fragmentoLista.findViewById(R.id.misPeliculas);  //Asignem el ID
         listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);    //Asignme el id
@@ -188,23 +208,6 @@ public class MainActivityFragment extends Fragment {
                 Intent detallesPeliculas = new Intent(getContext(), DetailsActivty.class);
                 detallesPeliculas.putExtra("pelicula", selectedFilm);
                 startActivity(detallesPeliculas);
-            }
-        });
-
-        //ActionBar
-        FloatingActionButton fab = (FloatingActionButton) fragmentoLista.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listaVisible == false) {
-                    gridPeliculas.setVisibility(View.GONE);
-                    listaPeliculas.setVisibility(View.VISIBLE);
-                    listaVisible = true;
-                } else {
-                    listaPeliculas.setVisibility(View.GONE);
-                    gridPeliculas.setVisibility(View.VISIBLE);
-                    listaVisible = false;
-                }
             }
         });
 
