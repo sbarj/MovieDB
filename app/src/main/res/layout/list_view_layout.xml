@@ -14,6 +14,8 @@
         android:layout_below="@+id/list_titulo"
         android:layout_alignLeft="@+id/list_descripcion"
         android:layout_alignStart="@+id/list_descripcion"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
         android:textColor="#ffffff" />
 
     <TextView
@@ -28,6 +30,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
         android:textColor="#ffffff" />
 
     <TextView
@@ -57,7 +61,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="146dp"
-        android:text="New Text"
+        android:text="Descripcion"
         android:id="@+id/list_descripcion"
         android:maxLines="8"
         android:layout_below="@+id/list_diaSalida"
@@ -65,6 +69,8 @@
         android:layout_alignEnd="@+id/list_puntuacion"
         android:layout_alignLeft="@+id/list_titulo"
         android:layout_alignStart="@+id/list_titulo"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="normal"
         android:textColor="#ffffff" />
 
 </RelativeLayout>
