@@ -43,9 +43,8 @@ public class MainActivityFragment extends Fragment {
     private MovieDbServiceTopRated serviceTopRated; // Interfaz para las peliculas mejor valoradas
     //MovieListAdapter myListAdapter; //Adaptador per al listView
     //MovieGridAdapter myGridAdapter; // Adaptador per al gridView
-    private cacheListAdapter myListAdapter;
-    private cacheGridAdapter myGridAdapter;
-    private ArrayList<Result> items; ///ArrayList amb els items **provisional
+    private cacheListAdapter myListAdapter; //Adaptador per al listView i ho emmagatzema a la base de dates
+    private cacheGridAdapter myGridAdapter; //Adaptador per al listView i ho emmagatzema a la base de dates
     private ListView listaPeliculas; //ListView on mostrarem els items
     private GridView gridPeliculas;  //GridView on mostrarem els items
     private TextView misPeliculas;
@@ -207,7 +206,6 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        items = new ArrayList<>();     //array list que contindrà les pel·licules
         misPeliculas = (TextView) fragmentoLista.findViewById(R.id.misPeliculas);  //Asignem el ID
         listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);    //Asignme el id
         gridPeliculas = (GridView) fragmentoLista.findViewById(R.id.gridPeliculas);
