@@ -52,7 +52,7 @@ public class MovieGridAdapter extends ArrayAdapter<Result> implements Serializab
             description.setEllipsize(TextUtils.TruncateAt.END);
         }*/
 
-        titulo.setText(pelicula.getTitle());
+        titulo.setText(pelicula.getTitle() + "\n (" + pelicula.getReleaseDate().substring(0, 4) + ")");
         Picasso.with(getContext()).load(posterUrl + posterSize + pelicula.getPosterPath()).fit().into(imagenPoster);
 
         return convertView; //Devolvemos la view ya rellena
