@@ -33,6 +33,13 @@
             android:label="@string/title_activity_details_activty"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+
+        <provider
+            android:name="tk.sbarjola.pa.moviedb.provider.MovieProvider"
+            android:authorities="com.tk.sbarjola.pa.moviedb.app.provider"
+            android:exported="false" />
+
+
     </application>
 
 </manifest>

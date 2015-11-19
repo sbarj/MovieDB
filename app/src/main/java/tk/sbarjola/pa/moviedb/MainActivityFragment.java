@@ -1,7 +1,11 @@
 package tk.sbarjola.pa.moviedb;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Movie;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -24,6 +28,8 @@ import retrofit.Response;
 import retrofit.Retrofit;
 import retrofit.http.GET;
 import retrofit.http.Query;
+import tk.sbarjola.pa.moviedb.provider.movie.MovieColumns;
+import tk.sbarjola.pa.moviedb.provider.movie.MovieContentValues;
 
 public class MainActivityFragment extends Fragment {
 
@@ -35,8 +41,10 @@ public class MainActivityFragment extends Fragment {
     public boolean listaVisible = false;
     private MovieDbServicePopular servicePopular;   // Interfaz para las peliculas populares
     private MovieDbServiceTopRated serviceTopRated; // Interfaz para las peliculas mejor valoradas
-    MovieListAdapter myListAdapter;  //Adaptador per al listView
-    MovieGridAdapter myGridAdapter;  //Adaptador per al gridView
+    //MovieListAdapter myListAdapter; //Adaptador per al listView
+    //MovieGridAdapter myGridAdapter; // Adaptador per al gridView
+    private cacheListAdapter myListAdapter;
+    private cacheGridAdapter myGridAdapter;
     private ArrayList<Result> items; ///ArrayList amb els items **provisional
     private ListView listaPeliculas; //ListView on mostrarem els items
     private GridView gridPeliculas;  //GridView on mostrarem els items
@@ -107,19 +115,41 @@ public class MainActivityFragment extends Fragment {
         Call<ListResult> llamada = (Call<ListResult>) servicePopular.pelispopulares(apiKey);
             llamada.enqueue(new Callback<ListResult>() {
                 @Override
-                public void onResponse(Response<ListResult> response, Retrofit retrofit) {
+                public void onResponse(Response<ListResult> response, Retrofit retrofit){
+
                     ListResult resultado = response.body();
+                    for(Result movie: resultado.getResults()){    // En este for guardamos en la base de datos
 
-                    myGridAdapter.clear();
-                    myGridAdapter.addAll(resultado.getResults());
-
-                    myListAdapter.clear();
-                    myListAdapter.addAll(resultado.getResults());
+                        MovieContentValues values = new MovieContentValues();
+                        values.putTitle(movie.getTitle());
+                        values.putDescription(movie.getOverview());
+                        values.putReleasedate(movie.getReleaseDate());
+                        values.putPopularity(movie.getPopularity().toString());
+                        values.putPosterpath(movie.getPosterPath());
+                        getContext().getContentResolver().insert(
+                        MovieColumns.CONTENT_URI, values.values());
+                    }
+                    showMovies();
                 }
 
                 @Override
-                public void onFailure(Throwable t) {}
+                public void onFailure(Throwable t) {
+                    showMovies();
+                }
             });
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void showMovies(){
+        Cursor cursor = getContext().getContentResolver().query(
+                MovieColumns.CONTENT_URI,
+                null,
+                null,
+                null,
+                "_id"
+        );
+        myListAdapter.swapCursor(cursor);
+        myGridAdapter.swapCursor(cursor);
     }
 
     public void topRated(){ // Actualitza la llista amb el llistat de "top rated"
@@ -130,17 +160,26 @@ public class MainActivityFragment extends Fragment {
         llamada.enqueue(new Callback<ListResult>(){
             @Override
             public void onResponse(Response<ListResult> response, Retrofit retrofit) {
+
                 ListResult resultado = response.body();
+                for(Result movie: resultado.getResults()){    // En este for guardamos en la base de datos
 
-                myGridAdapter.clear();
-                myGridAdapter.addAll(resultado.getResults());
-
-                myListAdapter.clear();
-                myListAdapter.addAll(resultado.getResults());
+                    MovieContentValues values = new MovieContentValues();
+                    values.putTitle(movie.getTitle());
+                    values.putDescription(movie.getOverview());
+                    values.putReleasedate(movie.getReleaseDate());
+                    values.putPopularity(movie.getPopularity().toString());
+                    values.putPosterpath(movie.getPosterPath());
+                    getContext().getContentResolver().insert(
+                            MovieColumns.CONTENT_URI, values.values());
+                }
+                showMovies();
             }
 
             @Override
-            public void onFailure(Throwable t) {}
+            public void onFailure(Throwable t) {
+                showMovies();
+            }
         });
     }
 
@@ -173,13 +212,27 @@ public class MainActivityFragment extends Fragment {
         listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);    //Asignme el id
         gridPeliculas = (GridView) fragmentoLista.findViewById(R.id.gridPeliculas);
 
-        myGridAdapter = new MovieGridAdapter(getContext(), 0, items);
+        myGridAdapter = new cacheGridAdapter(
+                getContext(),
+                R.layout.grid_view_layout,
+                null,
+                new String[] {MovieColumns.TITLE, MovieColumns.POSTERPATH},
+                new int[]{R.id.grid_Titulo, R.id.grid_imagenPoster},
+                0);
+
         gridPeliculas.setAdapter(myGridAdapter);
 
-        myListAdapter = new MovieListAdapter(getContext(), 0, items);  // Definim adaptador al layaout predefinit i al nostre array items
-        listaPeliculas.setAdapter(myListAdapter);    //Acoplem el adaptador
-
         // Gestionamos que vista va a mostrar la APP
+
+        myListAdapter = new cacheListAdapter(
+                getContext(),
+                R.layout.list_view_layout,
+                null,
+                new String[] {MovieColumns.TITLE, MovieColumns.DESCRIPTION, MovieColumns.POPULARITY, MovieColumns.RELEASEDATE, MovieColumns.POSTERPATH},
+                new int[]{R.id.list_titulo, R.id.list_descripcion, R.id.list_puntuacion, R.id.list_diaSalida, R.id.list_imagenPoster},
+                0);
+
+        listaPeliculas.setAdapter(myListAdapter); //Acoplem el adaptador
 
         if(settings.getString("VistaScreen", "0").equals("0")){
             gridPeliculas.setVisibility(View.INVISIBLE);
