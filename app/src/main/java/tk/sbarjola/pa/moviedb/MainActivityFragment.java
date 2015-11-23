@@ -5,7 +5,6 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Movie;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
-import java.util.ArrayList;
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -41,17 +39,20 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     // GET Movie Popular http://api.themoviedb.org/3/movie/popular
     // Full URL http://api.themoviedb.org/3/movie/popular?api_key=a7ec645f7c4f6bffaab8a964820325f7
 
-    public FloatingActionButton fab;
-    public boolean listaVisible = false;
+    public FloatingActionButton fab;                // FloatingActionBar para cambiar entre listView y gridView
+    public boolean listaVisible = false;            // Variable que controla si se muestra el listView o el gridView
     private MovieDbServicePopular servicePopular;   // Interfaz para las peliculas populares
     private MovieDbServiceTopRated serviceTopRated; // Interfaz para las peliculas mejor valoradas
-    private cacheListAdapter myListAdapter; //Adaptador per al listView i ho emmagatzema a la base de dates
-    private cacheGridAdapter myGridAdapter; //Adaptador per al listView i ho emmagatzema a la base de dates
-    private ListView listaPeliculas; //ListView on mostrarem els items
-    private GridView gridPeliculas;  //GridView on mostrarem els items
-    private TextView misPeliculas;
+    private cacheListAdapter myListAdapter;         // Adaptador per al listView i ho emmagatzema a la base de dates
+    private cacheGridAdapter myGridAdapter;         // Adaptador per al listView i ho emmagatzema a la base de dates
+    private ListView listaPeliculas;                // ListView on mostrarem els items
+    private GridView gridPeliculas;                 // GridView on mostrarem els items
+    private TextView misPeliculas;                  // TextView Auxiliar
+
+    // Datos de la API
+
     private String BaseURL = "http://api.themoviedb.org/3/movie/";  //Principio de la URL que usará retrofit
-    private String apiKey = "a7ec645f7c4f6bffaab8a964820325f7"; // Key de MovieDB
+    private String apiKey = "a7ec645f7c4f6bffaab8a964820325f7";     // Key de MovieDB
 
     // Declarem el retrofit variable global per a que així puguem ferlo servir desde tots els metodes sense tornar-ho a definir
 
@@ -63,7 +64,19 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onStart() { //Que cada cop que s'obre l'activity s'actualitzi la llista
         super.onStart();
-        refresh();
+
+        // Es gestiona les preferencies. Segons les preferencies, cridarà al mètode popular o al mètode toprated
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
+
+        // Aquí gestiona que categoria de peliculas va a mostrar
+
+        if(settings.getString("ListaPeliculas", "0").equals("0")){
+            ((AppCompatActivity) getActivity()) .getSupportActionBar().setTitle("MovieDB - Popular");
+        }
+        else if (settings.getString("ListaPeliculas", "1").equals("1")){
+            ((AppCompatActivity) getActivity()) .getSupportActionBar().setTitle("MovieDB - Top Rated");
+        }
     }
 
     @Override
@@ -95,22 +108,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         return super.onOptionsItemSelected(item);
     }
 
-    public void refresh(){  // El mètode refresh gestiona les preferencies. Segons les preferencies, cridarà al mètode popular o al mètode toprated
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
+    public void refresh(){  // El metode refresh nomes descarrega pelicules, nomes al pulsar-lo gastem dades
 
         // Descargamos los datos de las dos categorías, de Popular y de TopRated
         downloadPopular();
         downloadTopRated();
-
-        // Aquí gestiona que categoria de peliculas va a mostrar
-
-        if(settings.getString("ListaPeliculas", "0").equals("0")){
-            ((AppCompatActivity) getActivity()) .getSupportActionBar().setTitle("MovieDB - Popular");
-        }
-        else if (settings.getString("ListaPeliculas", "1").equals("1")){
-            ((AppCompatActivity) getActivity()) .getSupportActionBar().setTitle("MovieDB - Top Rated");
-        }
     }
 
     public void downloadPopular(){  // Actualitza la llista amb el llistat de "populars"
@@ -120,10 +122,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         Call<ListResult> llamada = (Call<ListResult>) servicePopular.pelispopulares(apiKey);
             llamada.enqueue(new Callback<ListResult>() {
                 @Override
-                public void onResponse(Response<ListResult> response, Retrofit retrofit){
+                public void onResponse(Response<ListResult> response, Retrofit retrofit) {
 
                     ListResult resultado = response.body();
-                    for(Result movie: resultado.getResults()){    // En este for guardamos en la base de datos
+                    for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
 
                         MovieContentValues values = new MovieContentValues();
                         values.putTitle(movie.getTitle());
@@ -132,29 +134,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                         values.putPopularity(movie.getPopularity().toString());
                         values.putPosterpath(movie.getPosterPath());
                         getContext().getContentResolver().insert(
-                        MovieColumns.CONTENT_URI, values.values());
+                                MovieColumns.CONTENT_URI, values.values());
                     }
-                    showMovies();
                 }
 
                 @Override
                 public void onFailure(Throwable t) {
-                    showMovies();
                 }
             });
-    }
-
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void showMovies(){
-        Cursor cursor = getContext().getContentResolver().query(
-                MovieColumns.CONTENT_URI,
-                null,
-                null,
-                null,
-                "_id"
-        );
-        myListAdapter.swapCursor(cursor);
-        myGridAdapter.swapCursor(cursor);
     }
 
     public void downloadTopRated(){ // Actualitza la llista amb el llistat de "top rated"
@@ -178,12 +165,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                     getContext().getContentResolver().insert(
                             MovieColumns.CONTENT_URI, values.values());
                 }
-                showMovies();
             }
 
             @Override
             public void onFailure(Throwable t) {
-                showMovies();
             }
         });
     }
@@ -226,8 +211,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         gridPeliculas.setAdapter(myGridAdapter);
 
-        // Gestionamos que vista va a mostrar la APP
-
         myListAdapter = new cacheListAdapter(
                 getContext(),
                 R.layout.list_view_layout,
@@ -237,6 +220,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 0);
 
         listaPeliculas.setAdapter(myListAdapter); //Acoplem el adaptador
+
+        // Gestionamos que vista va a mostrar la APP
 
         if(settings.getString("VistaScreen", "0").equals("0")){
             gridPeliculas.setVisibility(View.INVISIBLE);
@@ -249,21 +234,21 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             listaVisible = false;
         }
 
+        // Listener que controla las pulsaciones de la listView o gridView
+
         listaPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {   //Listener para el list
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Result selectedFilm = (Result) parent.getItemAtPosition(position);
-                Intent detallesPeliculas = new Intent(getContext(), DetailsActivty.class);
-                detallesPeliculas.putExtra("pelicula", selectedFilm);
-                startActivity(detallesPeliculas);
+                Intent i = new Intent(getContext(), DetailsActivty.class);
+                i.putExtra("cursor_id", id);
+                startActivity(i);
             }
         });
 
         gridPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  //Listener para el grid
-                Result selectedFilm = (Result) parent.getItemAtPosition(position);
-                Intent detallesPeliculas = new Intent(getContext(), DetailsActivty.class);
-                detallesPeliculas.putExtra("pelicula", selectedFilm);
-                startActivity(detallesPeliculas);
+                Intent i = new Intent(getContext(), DetailsActivty.class);
+                i.putExtra("cursor_id", id);
+                startActivity(i);
             }
         });
 

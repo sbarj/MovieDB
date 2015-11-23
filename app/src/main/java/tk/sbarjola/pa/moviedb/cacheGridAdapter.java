@@ -31,7 +31,6 @@ public class cacheGridAdapter extends SimpleCursorAdapter {
         this.context = context;
     }
 
-
     public View getView(int position, View convertView, ViewGroup parent) {
 
         // Creamos el objeto en la posición correspondiente
