@@ -24,6 +24,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.IOException;
+
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.GsonConverterFactory;
@@ -42,8 +45,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     public FloatingActionButton fab;                // FloatingActionBar para cambiar entre listView y gridView
     public boolean listaVisible = false;            // Variable que controla si se muestra el listView o el gridView
-    private MovieDbServicePopular servicePopular;   // Interfaz para las peliculas populares
-    private MovieDbServiceTopRated serviceTopRated; // Interfaz para las peliculas mejor valoradas
+    private MovieDbService service;   // Interfaz para las peliculas populares
     private cacheListAdapter myListAdapter;         // Adaptador per al listView i ho emmagatzema a la base de dates
     private cacheGridAdapter myGridAdapter;         // Adaptador per al listView i ho emmagatzema a la base de dates
     private ListView listaPeliculas;                // ListView on mostrarem els items
@@ -111,69 +113,44 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     public void refresh() {  // El metode refresh nomes descarrega pelicules, nomes al pulsar-lo gastem dades
 
         // Limpiamos la base de datos y descargamos los datos de las dos categorías, de Popular y de TopRated
-        clearMovies();
-        downloadPopular();
-        downloadTopRated();
+        UpdateMoviesTask downloadMoviesTask = new UpdateMoviesTask();
+        downloadMoviesTask.execute();
     }
 
-    public void downloadPopular() {  // Actualitza la llista amb el llistat de "populars"
+    public void downloadMovies() {  // Actualitza la llista amb el llistat de "populars"
 
-        servicePopular = retrofit.create(MovieDbServicePopular.class);
+        service = retrofit.create(MovieDbService.class);
 
-        Call<ListResult> llamada = (Call<ListResult>) servicePopular.pelispopulares(apiKey);
-        llamada.enqueue(new Callback<ListResult>() {
-            @Override
-            public void onResponse(Response<ListResult> response, Retrofit retrofit) {
+        Call<ListResult> llamada = (Call<ListResult>) service.pelispopulares(apiKey);
+        procesaResultado(llamada);
 
-                ListResult resultado = response.body();
-                for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
+        llamada = (Call<ListResult>) service.pelisvaloradas(apiKey);
+        procesaResultado(llamada);
 
-                    MovieContentValues values = new MovieContentValues();
-                    values.putTitle(movie.getTitle());
-                    values.putDescription(movie.getOverview());
-                    values.putReleasedate(movie.getReleaseDate());
-                    values.putPopularity(movie.getPopularity().toString());
-                    values.putPosterpath(movie.getPosterPath());
-                    getContext().getContentResolver().insert(
-                            MovieColumns.CONTENT_URI, values.values());
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-            }
-        });
     }
 
-    public void downloadTopRated() { // Actualitza la llista amb el llistat de "top rated"
+    private void procesaResultado(Call<ListResult> llamada) {
+        try {
+            Response<ListResult> response = llamada.execute();
+            ListResult resultado = response.body();
+            for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
 
-        serviceTopRated = retrofit.create(MovieDbServiceTopRated.class);
-
-        Call<ListResult> llamada = (Call<ListResult>) serviceTopRated.pelisvaloradas(apiKey);
-        llamada.enqueue(new Callback<ListResult>() {
-            @Override
-            public void onResponse(Response<ListResult> response, Retrofit retrofit) {
-
-                ListResult resultado = response.body();
-                for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
-
-                    MovieContentValues values = new MovieContentValues();
-                    values.putTitle(movie.getTitle());
-                    values.putDescription(movie.getOverview());
-                    values.putReleasedate(movie.getReleaseDate());
-                    values.putPopularity(movie.getPopularity().toString());
-                    values.putPosterpath(movie.getPosterPath());
-                    getContext().getContentResolver().insert(
-                            MovieColumns.CONTENT_URI, values.values());
-                }
+                MovieContentValues values = new MovieContentValues();
+                values.putTitle(movie.getTitle());
+                values.putDescription(movie.getOverview());
+                values.putReleasedate(movie.getReleaseDate());
+                values.putPopularity(movie.getPopularity().toString());
+                values.putPosterpath(movie.getPosterPath());
+                getContext().getContentResolver().insert(
+                        MovieColumns.CONTENT_URI, values.values());
             }
 
-            @Override
-            public void onFailure(Throwable t) {
 
-            }
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -299,27 +276,24 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         myGridAdapter.swapCursor(null);
     }
 
-    public interface MovieDbServicePopular { //Interficie per a la llista de popular
-        @GET("popular")
-        Call<ListResult> pelispopulares(
-                @Query("api_key") String api_key);
+public interface MovieDbService { //Interficie per a la llista de popular
+    @GET("popular")
+    Call<ListResult> pelispopulares(
+            @Query("api_key") String api_key);
+
+    @GET("top_rated")
+    Call<ListResult> pelisvaloradas(
+            @Query("api_key") String api_key);
+}
+
+class UpdateMoviesTask extends AsyncTask {
+
+    @Override
+    protected Object doInBackground(Object[] params) {
+
+        clearMovies();
+        downloadMovies();
+        return null;
     }
-
-    public interface MovieDbServiceTopRated { //Interficie per a la llista de topRated
-        @GET("top_rated")
-        Call<ListResult> pelisvaloradas(
-                @Query("api_key") String api_key);
-    }
-
-    class UpdateMovies extends AsyncTask {
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-
-            Call<ListResult> topRated = (Call<ListResult>) serviceTopRated.pelisvaloradas(apiKey);
-            Call<ListResult> llamada = (Call<ListResult>) servicePopular.pelispopulares(apiKey);
-
-            return null;
-        }
-    }
+}
 }
