@@ -84,7 +84,7 @@ public class DetailsActivtyFragment extends Fragment {
 
         if (cursor != null){    // Incorporamos los objetos al layout si existe algo en el cursor
             cursor.moveToNext();
-
+            
             titulo.setText(cursor.getString(cursor.getColumnIndex(MovieColumns.TITLE)));
             puntuacion.setText("Puntuación: " + cursor.getString(cursor.getColumnIndex(MovieColumns.POPULARITY)).toString() + "%");
             diaSalida.setText("Estreno : " + cursor.getString(cursor.getColumnIndex(MovieColumns.RELEASEDATE)).toString());

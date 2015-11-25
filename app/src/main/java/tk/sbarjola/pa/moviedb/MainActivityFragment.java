@@ -5,6 +5,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -71,29 +72,28 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         // Aquí gestiona que categoria de peliculas va a mostrar
 
-        if(settings.getString("ListaPeliculas", "0").equals("0")){
-            ((AppCompatActivity) getActivity()) .getSupportActionBar().setTitle("MovieDB - Popular");
-        }
-        else if (settings.getString("ListaPeliculas", "1").equals("1")){
-            ((AppCompatActivity) getActivity()) .getSupportActionBar().setTitle("MovieDB - Top Rated");
+        if (settings.getString("ListaPeliculas", "0").equals("0")) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("MovieDB - Popular");
+        } else if (settings.getString("ListaPeliculas", "1").equals("1")) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("MovieDB - Top Rated");
         }
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);    //Aixo fa que mostri el menu. Com n'hi han fragments no grafics cal especificar-ho
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){ //Afegim una opcio "Refresh" al menu del fragment
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) { //Afegim una opcio "Refresh" al menu del fragment
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.menu_fragment, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -108,53 +108,25 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         return super.onOptionsItemSelected(item);
     }
 
-    public void refresh(){  // El metode refresh nomes descarrega pelicules, nomes al pulsar-lo gastem dades
+    public void refresh() {  // El metode refresh nomes descarrega pelicules, nomes al pulsar-lo gastem dades
 
-        // Descargamos los datos de las dos categorías, de Popular y de TopRated
+        // Limpiamos la base de datos y descargamos los datos de las dos categorías, de Popular y de TopRated
+        clearMovies();
         downloadPopular();
         downloadTopRated();
     }
 
-    public void downloadPopular(){  // Actualitza la llista amb el llistat de "populars"
+    public void downloadPopular() {  // Actualitza la llista amb el llistat de "populars"
 
         servicePopular = retrofit.create(MovieDbServicePopular.class);
 
         Call<ListResult> llamada = (Call<ListResult>) servicePopular.pelispopulares(apiKey);
-            llamada.enqueue(new Callback<ListResult>() {
-                @Override
-                public void onResponse(Response<ListResult> response, Retrofit retrofit) {
-
-                    ListResult resultado = response.body();
-                    for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
-
-                        MovieContentValues values = new MovieContentValues();
-                        values.putTitle(movie.getTitle());
-                        values.putDescription(movie.getOverview());
-                        values.putReleasedate(movie.getReleaseDate());
-                        values.putPopularity(movie.getPopularity().toString());
-                        values.putPosterpath(movie.getPosterPath());
-                        getContext().getContentResolver().insert(
-                                MovieColumns.CONTENT_URI, values.values());
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                }
-            });
-    }
-
-    public void downloadTopRated(){ // Actualitza la llista amb el llistat de "top rated"
-
-        serviceTopRated = retrofit.create(MovieDbServiceTopRated.class);
-
-        Call<ListResult> llamada = (Call<ListResult>) serviceTopRated.pelisvaloradas(apiKey);
-        llamada.enqueue(new Callback<ListResult>(){
+        llamada.enqueue(new Callback<ListResult>() {
             @Override
             public void onResponse(Response<ListResult> response, Retrofit retrofit) {
 
                 ListResult resultado = response.body();
-                for(Result movie: resultado.getResults()){    // En este for guardamos en la base de datos
+                for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
 
                     MovieContentValues values = new MovieContentValues();
                     values.putTitle(movie.getTitle());
@@ -173,9 +145,39 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         });
     }
 
+    public void downloadTopRated() { // Actualitza la llista amb el llistat de "top rated"
+
+        serviceTopRated = retrofit.create(MovieDbServiceTopRated.class);
+
+        Call<ListResult> llamada = (Call<ListResult>) serviceTopRated.pelisvaloradas(apiKey);
+        llamada.enqueue(new Callback<ListResult>() {
+            @Override
+            public void onResponse(Response<ListResult> response, Retrofit retrofit) {
+
+                ListResult resultado = response.body();
+                for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
+
+                    MovieContentValues values = new MovieContentValues();
+                    values.putTitle(movie.getTitle());
+                    values.putDescription(movie.getOverview());
+                    values.putReleasedate(movie.getReleaseDate());
+                    values.putPopularity(movie.getPopularity().toString());
+                    values.putPosterpath(movie.getPosterPath());
+                    getContext().getContentResolver().insert(
+                            MovieColumns.CONTENT_URI, values.values());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+
+            }
+        });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
+                             Bundle savedInstanceState) {
 
         View fragmentoLista = inflater.inflate(R.layout.fragment_main, container, false);    //Definimos el fragment
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
@@ -197,44 +199,49 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             }
         });
 
-        misPeliculas = (TextView) fragmentoLista.findViewById(R.id.misPeliculas);  //Asignem el ID
-        listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);    //Asignme el id
+        // Declaramos los TextView y el GridView para hacer los adapters
+
+        misPeliculas = (TextView) fragmentoLista.findViewById(R.id.misPeliculas);
+        listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);
         gridPeliculas = (GridView) fragmentoLista.findViewById(R.id.gridPeliculas);
+
+        // GridAdapter
 
         myGridAdapter = new cacheGridAdapter(
                 getContext(),
                 R.layout.grid_view_layout,
                 null,
-                new String[] {MovieColumns.TITLE, MovieColumns.POSTERPATH},
+                new String[]{MovieColumns.TITLE, MovieColumns.POSTERPATH},
                 new int[]{R.id.grid_Titulo, R.id.grid_imagenPoster},
                 0);
 
-        gridPeliculas.setAdapter(myGridAdapter);
+        gridPeliculas.setAdapter(myGridAdapter);    //Acoplem el adaptador
+
+        // ListAdapter
 
         myListAdapter = new cacheListAdapter(
                 getContext(),
                 R.layout.list_view_layout,
                 null,
-                new String[] {MovieColumns.TITLE, MovieColumns.DESCRIPTION, MovieColumns.POPULARITY, MovieColumns.RELEASEDATE, MovieColumns.POSTERPATH},
+                new String[]{MovieColumns.TITLE, MovieColumns.DESCRIPTION, MovieColumns.POPULARITY, MovieColumns.RELEASEDATE, MovieColumns.POSTERPATH},
                 new int[]{R.id.list_titulo, R.id.list_descripcion, R.id.list_puntuacion, R.id.list_diaSalida, R.id.list_imagenPoster},
                 0);
 
-        listaPeliculas.setAdapter(myListAdapter); //Acoplem el adaptador
+        listaPeliculas.setAdapter(myListAdapter);   //Acoplem el adaptador
 
         // Gestionamos que vista va a mostrar la APP
 
-        if(settings.getString("VistaScreen", "0").equals("0")){
+        if (settings.getString("VistaScreen", "0").equals("0")) {
             gridPeliculas.setVisibility(View.INVISIBLE);
             listaPeliculas.setVisibility(View.VISIBLE);
             listaVisible = true;
-        }
-        else if (settings.getString("VistaScreen", "1").equals("1")){
+        } else if (settings.getString("VistaScreen", "1").equals("1")) {
             listaPeliculas.setVisibility(View.GONE);
             gridPeliculas.setVisibility(View.VISIBLE);
             listaVisible = false;
         }
 
-        // Listener que controla las pulsaciones de la listView o gridView
+        // Listeners que controlan las pulsaciones de la listView y gridView
 
         listaPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {   //Listener para el list
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -258,11 +265,19 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         return fragmentoLista;
     }
 
+    // Método para limpiar y vaciar la base de datos
+    private void clearMovies() {
+        getContext().getContentResolver().delete(
+                MovieColumns.CONTENT_URI,
+                null,
+                null);
+    }
+
     // Según en qué situación haremos una cosa u otra
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args){
-       return new android.support.v4.content.CursorLoader(getContext(),
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new android.support.v4.content.CursorLoader(getContext(),
                 MovieColumns.CONTENT_URI,
                 null,
                 null,
@@ -272,27 +287,39 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data){
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         myListAdapter.swapCursor(data);
         myGridAdapter.swapCursor(data);
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
-    public void onLoaderReset(Loader<Cursor> loader){
+    public void onLoaderReset(Loader<Cursor> loader) {
         myListAdapter.swapCursor(null);
         myGridAdapter.swapCursor(null);
     }
 
-    public interface MovieDbServicePopular{ //Interficie per a la llista de popular
+    public interface MovieDbServicePopular { //Interficie per a la llista de popular
         @GET("popular")
         Call<ListResult> pelispopulares(
                 @Query("api_key") String api_key);
     }
 
-    public interface MovieDbServiceTopRated{ //Interficie per a la llista de topRated
+    public interface MovieDbServiceTopRated { //Interficie per a la llista de topRated
         @GET("top_rated")
         Call<ListResult> pelisvaloradas(
                 @Query("api_key") String api_key);
+    }
+
+    class UpdateMovies extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+
+            Call<ListResult> topRated = (Call<ListResult>) serviceTopRated.pelisvaloradas(apiKey);
+            Call<ListResult> llamada = (Call<ListResult>) servicePopular.pelispopulares(apiKey);
+
+            return null;
+        }
     }
 }
