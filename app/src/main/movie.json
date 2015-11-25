@@ -1,0 +1,25 @@
+{
+  "documentation": "A human being which is part of a team.",
+  "fields": [
+    {
+      "name": "title",
+      "type": "String"
+    },
+    {
+      "name": "releaseDate",
+      "type": "String"
+    },
+    {
+      "name": "popularity",
+      "type": "String"
+    },
+    {
+      "name": "posterpath",
+      "type": "String"
+    },
+    {
+      "name": "description",
+      "type": "String"
+    }
+  ]
+}

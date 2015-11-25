@@ -1,7 +1,6 @@
 package tk.sbarjola.pa.moviedb;
 
 import android.annotation.TargetApi;
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -45,7 +44,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
     public FloatingActionButton fab;                // FloatingActionBar para cambiar entre listView y gridView
     public boolean listaVisible = false;            // Variable que controla si se muestra el listView o el gridView
-    private MovieDbService service;   // Interfaz para las peliculas populares
+    private MovieDbService service;                 // Interfaz para los servicios de Retrofit
     private cacheListAdapter myListAdapter;         // Adaptador per al listView i ho emmagatzema a la base de dates
     private cacheGridAdapter myGridAdapter;         // Adaptador per al listView i ho emmagatzema a la base de dates
     private ListView listaPeliculas;                // ListView on mostrarem els items
@@ -69,11 +68,9 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         super.onStart();
 
         // Es gestiona les preferencies. Segons les preferencies, cridarà al mètode popular o al mètode toprated
-
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
 
         // Aquí gestiona que categoria de peliculas va a mostrar
-
         if (settings.getString("ListaPeliculas", "0").equals("0")) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("MovieDB - Popular");
         } else if (settings.getString("ListaPeliculas", "1").equals("1")) {
@@ -117,24 +114,26 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         downloadMoviesTask.execute();
     }
 
-    public void downloadMovies() {  // Actualitza la llista amb el llistat de "populars"
+    public void downloadMovies() {  // Actualitza la llista descargando todas las peliculas
 
-        service = retrofit.create(MovieDbService.class);
+        service = retrofit.create(MovieDbService.class);    // Llamamos a nuestro servicio de retrofit
 
-        Call<ListResult> llamada = (Call<ListResult>) service.pelispopulares(apiKey);
+        Call<ListResult> llamada = (Call<ListResult>) service.pelispopulares(apiKey);   // Uno para pelisPopulares
         procesaResultado(llamada);
 
-        llamada = (Call<ListResult>) service.pelisvaloradas(apiKey);
+        llamada = (Call<ListResult>) service.pelisvaloradas(apiKey);    // Otro para las mejor valoradas
         procesaResultado(llamada);
 
     }
 
     private void procesaResultado(Call<ListResult> llamada) {
+
         try {
+
             Response<ListResult> response = llamada.execute();
             ListResult resultado = response.body();
-            for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
 
+            for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
                 MovieContentValues values = new MovieContentValues();
                 values.putTitle(movie.getTitle());
                 values.putDescription(movie.getOverview());
@@ -145,12 +144,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                         MovieColumns.CONTENT_URI, values.values());
             }
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -177,13 +174,11 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         });
 
         // Declaramos los TextView y el GridView para hacer los adapters
-
         misPeliculas = (TextView) fragmentoLista.findViewById(R.id.misPeliculas);
         listaPeliculas = (ListView) fragmentoLista.findViewById(R.id.listaPeliculas);
         gridPeliculas = (GridView) fragmentoLista.findViewById(R.id.gridPeliculas);
 
-        // GridAdapter
-
+        // Creamos y definimos el GridAdapter
         myGridAdapter = new cacheGridAdapter(
                 getContext(),
                 R.layout.grid_view_layout,
@@ -194,8 +189,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         gridPeliculas.setAdapter(myGridAdapter);    //Acoplem el adaptador
 
-        // ListAdapter
-
+        // Creamos y definimos el ListAdapter
         myListAdapter = new cacheListAdapter(
                 getContext(),
                 R.layout.list_view_layout,
@@ -286,14 +280,12 @@ public interface MovieDbService { //Interficie per a la llista de popular
             @Query("api_key") String api_key);
 }
 
-class UpdateMoviesTask extends AsyncTask {
-
-    @Override
-    protected Object doInBackground(Object[] params) {
-
-        clearMovies();
-        downloadMovies();
-        return null;
+    class UpdateMoviesTask extends AsyncTask {
+        @Override
+        protected Object doInBackground(Object[] params) {
+            clearMovies();
+            downloadMovies();
+            return null;
+        }
     }
-}
 }

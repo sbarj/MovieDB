@@ -1,0 +1,13 @@
+{
+  "syntaxVersion": 3,
+  "projectPackageId": "tk.sbarjola.pa.moviedb",
+  "authority": "com.tk.sbarjola.pa.moviedb.app.provider",
+  "providerJavaPackage": "com.tk.sbarjola.pa.moviedb.app.provider",
+  "providerClassName": "MovieProvider",
+  "sqliteOpenHelperClassName": "MovieSQLiteOpenHelper",
+  "sqliteOpenHelperCallbacksClassName": "MovieSQLiteOpenHelperCallbacks",
+  "databaseFileName": "movie.db",
+  "databaseVersion": 1,
+  "enableForeignKeys": true,
+  "useAnnotations": true
+}
