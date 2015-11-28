@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -70,12 +71,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         // Es gestiona les preferencies. Segons les preferencies, cridarà al mètode popular o al mètode toprated
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
 
-        // Aquí gestiona que categoria de peliculas va a mostrar
         if (settings.getString("ListaPeliculas", "0").equals("0")) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("MovieDB - Popular");
-        } else if (settings.getString("ListaPeliculas", "1").equals("1")) {
+        }
+        else if (settings.getString("ListaPeliculas", "1").equals("1")) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("MovieDB - Top Rated");
         }
+
     }
 
     @Override
@@ -119,14 +121,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         service = retrofit.create(MovieDbService.class);    // Llamamos a nuestro servicio de retrofit
 
         Call<ListResult> llamada = (Call<ListResult>) service.pelispopulares(apiKey);   // Uno para pelisPopulares
-        procesaResultado(llamada);
+        procesaResultado(llamada, "populares");
 
         llamada = (Call<ListResult>) service.pelisvaloradas(apiKey);    // Otro para las mejor valoradas
-        procesaResultado(llamada);
+        procesaResultado(llamada, "topRated");
 
     }
 
-    private void procesaResultado(Call<ListResult> llamada) {
+    private void procesaResultado(Call<ListResult> llamada, String categoriaPelicula) {
 
         try {
 
@@ -249,13 +251,38 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     // Según en qué situación haremos una cosa u otra
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new android.support.v4.content.CursorLoader(getContext(),
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        // Es gestiona les preferencies. Segons les preferencies, cridarà al mètode popular o al mètode toprated
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        // Aquí gestiona que categoria de peliculas va a mostrar
+
+        if (settings.getString("ListaPeliculas", "0").equals("0")) {
+            return new CursorLoader(getContext(),
+                    MovieColumns.CONTENT_URI,
+                    null,
+                    MovieColumns.CATEGORY + "= ? ", new String[]{"populares"},
+                    null);
+
+        }
+        else {
+            return new CursorLoader(getContext(),
+                    MovieColumns.CONTENT_URI,
+                    null,
+                    MovieColumns.CATEGORY + "= ? ", new String[]{"topRated"},
+                    null);
+
+        }
+
+        /*
+                return new android.support.v4.content.CursorLoader(getContext(),
                 MovieColumns.CONTENT_URI,
                 null,
                 null,
                 null,
                 "_id");
+         */
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
