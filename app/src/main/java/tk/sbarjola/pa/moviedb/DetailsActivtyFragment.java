@@ -18,7 +18,7 @@ public class DetailsActivtyFragment extends Fragment {
 
     public Result pelicula;
     final private String posterUrl = "http://image.tmdb.org/t/p/";
-    final private String posterSize = "w185";
+    final private String posterSize = "w342";
 
     private long itemId = -1;
 
@@ -89,9 +89,9 @@ public class DetailsActivtyFragment extends Fragment {
             titulo.setText(cursor.getString(cursor.getColumnIndex(MovieColumns.TITLE)));
             tituloOriginal.setText(cursor.getString(cursor.getColumnIndex(MovieColumns.ORIGINALTITLE)));
             puntuacion.setText("Puntuación: " + cursor.getString(cursor.getColumnIndex(MovieColumns.POPULARITY)).substring(0, 5) + "%");
-            diaSalida.setText("Estreno : " + cursor.getString(cursor.getColumnIndex(MovieColumns.RELEASEDATE)).toString());
+            diaSalida.setText("Estreno: " + cursor.getString(cursor.getColumnIndex(MovieColumns.RELEASEDATE)).toString());
             description.setText("Descripción: \n \n" + cursor.getString(cursor.getColumnIndex(MovieColumns.DESCRIPTION)).toString());
-            idioma.setText("Idioma : " + cursor.getString(cursor.getColumnIndex(MovieColumns.LANGUAGE)));
+            idioma.setText("Idioma: " + cursor.getString(cursor.getColumnIndex(MovieColumns.LANGUAGE)));
             Picasso.with(getContext()).load(posterUrl + posterSize + cursor.getString(cursor.getColumnIndex(MovieColumns.POSTERPATH)).toString()).fit().into(imagenPoster);
         }
     }

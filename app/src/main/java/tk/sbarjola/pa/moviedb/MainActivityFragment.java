@@ -71,6 +71,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         // Es gestiona les preferencies. Segons les preferencies, cridarà al mètode popular o al mètode toprated
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());   // necesario para referenciar y leer la configuración del programa
 
+        // Según la categoría que se esté mostrando cambiamos el titulo de la toolbar
         if (settings.getString("ListaPeliculas", "0").equals("0")) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("MovieDB - Popular");
         }
@@ -78,6 +79,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("MovieDB - Top Rated");
         }
 
+        getLoaderManager().restartLoader(0, null, this);    // Cada vez que carga el activity reseteamos las peliculas que mostramos
     }
 
     @Override
@@ -105,13 +107,14 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             refresh();  //Fem que al presionar el Refresh cridi al metode refresh
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     public void refresh() {  // El metode refresh nomes descarrega pelicules, nomes al pulsar-lo gastem dades
 
         // Limpiamos la base de datos y descargamos los datos de las dos categorías, de Popular y de TopRated
+        // llamando a nuestro AsyncTask que hará el trabajo en segundo plano
+
         UpdateMoviesTask downloadMoviesTask = new UpdateMoviesTask();
         downloadMoviesTask.execute();
     }
@@ -259,31 +262,26 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         // Aquí gestiona que categoria de peliculas va a mostrar
 
-        if (settings.getString("ListaPeliculas", "0").equals("0")) {
+        if (settings.getString("ListaPeliculas", "0").equals("0")) {    // Si tenemos activada las populares
             return new CursorLoader(getContext(),
                     MovieColumns.CONTENT_URI,
                     null,
-                    MovieColumns.CATEGORY + "= ? ", new String[]{"populares"},
+                    MovieColumns.CATEGORY + "= ? ", new String[]{"populares"},  // Que haga un select de las populares
                     null);
-
         }
-        else {
+        else if (settings.getString("ListaPeliculas", "0").equals("1")){   // Si tenemos activada las topRated
             return new CursorLoader(getContext(),
                     MovieColumns.CONTENT_URI,
                     null,
-                    MovieColumns.CATEGORY + "= ? ", new String[]{"topRated"},
+                    MovieColumns.CATEGORY + "= ? ", new String[]{"topRated"},   // Que haga un select de las topRated
                     null);
-
         }
-
-        /*
                 return new android.support.v4.content.CursorLoader(getContext(),
                 MovieColumns.CONTENT_URI,
                 null,
                 null,
                 null,
                 "_id");
-         */
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -300,15 +298,15 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         myGridAdapter.swapCursor(null);
     }
 
-public interface MovieDbService { //Interficie per a la llista de popular
-    @GET("popular")
-    Call<ListResult> pelispopulares(
-            @Query("api_key") String api_key);
+    public interface MovieDbService { //Interficie per a la llista de popular
+        @GET("popular")
+        Call<ListResult> pelispopulares(
+                @Query("api_key") String api_key);
 
-    @GET("top_rated")
-    Call<ListResult> pelisvaloradas(
-            @Query("api_key") String api_key);
-}
+        @GET("top_rated")
+        Call<ListResult> pelisvaloradas(
+                @Query("api_key") String api_key);
+    }
 
     class UpdateMoviesTask extends AsyncTask {
         @Override

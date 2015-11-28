@@ -21,7 +21,7 @@ import tk.sbarjola.pa.moviedb.provider.movie.MovieColumns;
 public class cacheGridAdapter extends SimpleCursorAdapter {
 
     final private String posterUrl = "http://image.tmdb.org/t/p/";
-    final private String posterSize = "w185";
+    final private String posterSize = "w342";
     Context context;
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
