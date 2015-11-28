@@ -140,6 +140,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 values.putReleasedate(movie.getReleaseDate());
                 values.putPopularity(movie.getPopularity().toString());
                 values.putPosterpath(movie.getPosterPath());
+                values.putOriginaltitle(movie.getOriginalTitle());
+                values.putLanguage(movie.getOriginalLanguage());
                 getContext().getContentResolver().insert(
                         MovieColumns.CONTENT_URI, values.values());
             }

@@ -277,4 +277,124 @@ public class MovieSelection extends AbstractSelection<MovieSelection> {
         orderBy(MovieColumns.DESCRIPTION, false);
         return this;
     }
+
+    public MovieSelection category(String... value) {
+        addEquals(MovieColumns.CATEGORY, value);
+        return this;
+    }
+
+    public MovieSelection categoryNot(String... value) {
+        addNotEquals(MovieColumns.CATEGORY, value);
+        return this;
+    }
+
+    public MovieSelection categoryLike(String... value) {
+        addLike(MovieColumns.CATEGORY, value);
+        return this;
+    }
+
+    public MovieSelection categoryContains(String... value) {
+        addContains(MovieColumns.CATEGORY, value);
+        return this;
+    }
+
+    public MovieSelection categoryStartsWith(String... value) {
+        addStartsWith(MovieColumns.CATEGORY, value);
+        return this;
+    }
+
+    public MovieSelection categoryEndsWith(String... value) {
+        addEndsWith(MovieColumns.CATEGORY, value);
+        return this;
+    }
+
+    public MovieSelection orderByCategory(boolean desc) {
+        orderBy(MovieColumns.CATEGORY, desc);
+        return this;
+    }
+
+    public MovieSelection orderByCategory() {
+        orderBy(MovieColumns.CATEGORY, false);
+        return this;
+    }
+
+    public MovieSelection language(String... value) {
+        addEquals(MovieColumns.LANGUAGE, value);
+        return this;
+    }
+
+    public MovieSelection languageNot(String... value) {
+        addNotEquals(MovieColumns.LANGUAGE, value);
+        return this;
+    }
+
+    public MovieSelection languageLike(String... value) {
+        addLike(MovieColumns.LANGUAGE, value);
+        return this;
+    }
+
+    public MovieSelection languageContains(String... value) {
+        addContains(MovieColumns.LANGUAGE, value);
+        return this;
+    }
+
+    public MovieSelection languageStartsWith(String... value) {
+        addStartsWith(MovieColumns.LANGUAGE, value);
+        return this;
+    }
+
+    public MovieSelection languageEndsWith(String... value) {
+        addEndsWith(MovieColumns.LANGUAGE, value);
+        return this;
+    }
+
+    public MovieSelection orderByLanguage(boolean desc) {
+        orderBy(MovieColumns.LANGUAGE, desc);
+        return this;
+    }
+
+    public MovieSelection orderByLanguage() {
+        orderBy(MovieColumns.LANGUAGE, false);
+        return this;
+    }
+
+    public MovieSelection originaltitle(String... value) {
+        addEquals(MovieColumns.ORIGINALTITLE, value);
+        return this;
+    }
+
+    public MovieSelection originaltitleNot(String... value) {
+        addNotEquals(MovieColumns.ORIGINALTITLE, value);
+        return this;
+    }
+
+    public MovieSelection originaltitleLike(String... value) {
+        addLike(MovieColumns.ORIGINALTITLE, value);
+        return this;
+    }
+
+    public MovieSelection originaltitleContains(String... value) {
+        addContains(MovieColumns.ORIGINALTITLE, value);
+        return this;
+    }
+
+    public MovieSelection originaltitleStartsWith(String... value) {
+        addStartsWith(MovieColumns.ORIGINALTITLE, value);
+        return this;
+    }
+
+    public MovieSelection originaltitleEndsWith(String... value) {
+        addEndsWith(MovieColumns.ORIGINALTITLE, value);
+        return this;
+    }
+
+    public MovieSelection orderByOriginaltitle(boolean desc) {
+        orderBy(MovieColumns.ORIGINALTITLE, desc);
+        return this;
+    }
+
+    public MovieSelection orderByOriginaltitle() {
+        orderBy(MovieColumns.ORIGINALTITLE, false);
+        return this;
+    }
 }

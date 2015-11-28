@@ -75,4 +75,34 @@ public class MovieCursor extends AbstractCursor implements MovieModel {
         String res = getStringOrNull(MovieColumns.DESCRIPTION);
         return res;
     }
+
+    /**
+     * Get the {@code category} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    public String getCategory() {
+        String res = getStringOrNull(MovieColumns.CATEGORY);
+        return res;
+    }
+
+    /**
+     * Get the {@code language} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    public String getLanguage() {
+        String res = getStringOrNull(MovieColumns.LANGUAGE);
+        return res;
+    }
+
+    /**
+     * Get the {@code originaltitle} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    public String getOriginaltitle() {
+        String res = getStringOrNull(MovieColumns.ORIGINALTITLE);
+        return res;
+    }
 }

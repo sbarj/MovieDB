@@ -22,7 +22,7 @@ public class MovieProvider extends BaseContentProvider {
     private static final String TYPE_CURSOR_ITEM = "vnd.android.cursor.item/";
     private static final String TYPE_CURSOR_DIR = "vnd.android.cursor.dir/";
 
-    public static final String AUTHORITY = "com.tk.sbarjola.pa.moviedb.app.provider";
+    public static final String AUTHORITY = "tk.sbarjola.pa.moviedb.provider";
     public static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
 
     private static final int URI_TYPE_MOVIE = 0;

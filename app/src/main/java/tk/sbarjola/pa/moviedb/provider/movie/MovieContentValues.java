@@ -88,4 +88,34 @@ public class MovieContentValues extends AbstractContentValues {
         mContentValues.putNull(MovieColumns.DESCRIPTION);
         return this;
     }
+
+    public MovieContentValues putCategory(@Nullable String value) {
+        mContentValues.put(MovieColumns.CATEGORY, value);
+        return this;
+    }
+
+    public MovieContentValues putCategoryNull() {
+        mContentValues.putNull(MovieColumns.CATEGORY);
+        return this;
+    }
+
+    public MovieContentValues putLanguage(@Nullable String value) {
+        mContentValues.put(MovieColumns.LANGUAGE, value);
+        return this;
+    }
+
+    public MovieContentValues putLanguageNull() {
+        mContentValues.putNull(MovieColumns.LANGUAGE);
+        return this;
+    }
+
+    public MovieContentValues putOriginaltitle(@Nullable String value) {
+        mContentValues.put(MovieColumns.ORIGINALTITLE, value);
+        return this;
+    }
+
+    public MovieContentValues putOriginaltitleNull() {
+        mContentValues.putNull(MovieColumns.ORIGINALTITLE);
+        return this;
+    }
 }

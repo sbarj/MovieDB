@@ -46,4 +46,25 @@ public interface MovieModel extends BaseModel {
      */
     @Nullable
     String getDescription();
+
+    /**
+     * Get the {@code category} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    String getCategory();
+
+    /**
+     * Get the {@code language} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    String getLanguage();
+
+    /**
+     * Get the {@code originaltitle} value.
+     * Can be {@code null}.
+     */
+    @Nullable
+    String getOriginaltitle();
 }

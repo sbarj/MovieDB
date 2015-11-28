@@ -19,12 +19,16 @@ public class DetailsActivtyFragment extends Fragment {
     public Result pelicula;
     final private String posterUrl = "http://image.tmdb.org/t/p/";
     final private String posterSize = "w185";
+
     private long itemId = -1;
+
     TextView titulo;
     TextView puntuacion;
     TextView diaSalida;
     ImageView imagenPoster;
     TextView description;
+    TextView idioma;
+    TextView tituloOriginal;
 
     public DetailsActivtyFragment() {
     }
@@ -43,11 +47,8 @@ public class DetailsActivtyFragment extends Fragment {
         diaSalida = (TextView) fragmentoDetails.findViewById(R.id.list_diaSalida);
         imagenPoster = (ImageView) fragmentoDetails.findViewById(R.id.peliculaPosterDetails);
         description = (TextView) fragmentoDetails.findViewById(R.id.descripcionDetails);
-
-        /*POR IMPLEMENTAR (REHACER BDD)
-        TextView idioma = (TextView) fragmentoDetails.findViewById(R.id.idiomaPeliculaDetails);
-        TextView adultos = (TextView) fragmentoDetails.findViewById(R.id.adultDetails);
-        TextView tituloOriginal = (TextView) fragmentoDetails.findViewById(R.id.tituloOriginalDetails); */
+        idioma = (TextView) fragmentoDetails.findViewById(R.id.idiomaPeliculaDetails);
+        tituloOriginal = (TextView) fragmentoDetails.findViewById(R.id.tituloOriginalDetails);
 
         // Load movie data
         itemId = getActivity().getIntent().getLongExtra("cursor_id", -1);
@@ -86,9 +87,11 @@ public class DetailsActivtyFragment extends Fragment {
             cursor.moveToNext();
             
             titulo.setText(cursor.getString(cursor.getColumnIndex(MovieColumns.TITLE)));
-            puntuacion.setText("Puntuación: " + cursor.getString(cursor.getColumnIndex(MovieColumns.POPULARITY)).toString() + "%");
+            tituloOriginal.setText(cursor.getString(cursor.getColumnIndex(MovieColumns.ORIGINALTITLE)));
+            puntuacion.setText("Puntuación: " + cursor.getString(cursor.getColumnIndex(MovieColumns.POPULARITY)).substring(0, 5) + "%");
             diaSalida.setText("Estreno : " + cursor.getString(cursor.getColumnIndex(MovieColumns.RELEASEDATE)).toString());
             description.setText("Descripción: \n \n" + cursor.getString(cursor.getColumnIndex(MovieColumns.DESCRIPTION)).toString());
+            idioma.setText("Idioma : " + cursor.getString(cursor.getColumnIndex(MovieColumns.LANGUAGE)));
             Picasso.with(getContext()).load(posterUrl + posterSize + cursor.getString(cursor.getColumnIndex(MovieColumns.POSTERPATH)).toString()).fit().into(imagenPoster);
         }
     }

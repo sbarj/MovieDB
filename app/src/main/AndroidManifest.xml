@@ -36,9 +36,8 @@
 
         <provider
             android:name="tk.sbarjola.pa.moviedb.provider.MovieProvider"
-            android:authorities="com.tk.sbarjola.pa.moviedb.app.provider"
+            android:authorities="tk.sbarjola.pa.moviedb.provider"
             android:exported="false" />
-
 
     </application>
 

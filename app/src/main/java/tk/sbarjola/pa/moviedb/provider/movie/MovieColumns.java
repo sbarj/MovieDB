@@ -28,6 +28,12 @@ public class MovieColumns implements BaseColumns {
 
     public static final String DESCRIPTION = "description";
 
+    public static final String CATEGORY = "category";
+
+    public static final String LANGUAGE = "language";
+
+    public static final String ORIGINALTITLE = "originalTitle";
+
 
     public static final String DEFAULT_ORDER = TABLE_NAME + "." +_ID;
 
@@ -38,7 +44,10 @@ public class MovieColumns implements BaseColumns {
             RELEASEDATE,
             POPULARITY,
             POSTERPATH,
-            DESCRIPTION
+            DESCRIPTION,
+            CATEGORY,
+            LANGUAGE,
+            ORIGINALTITLE
     };
     // @formatter:on
 
@@ -50,6 +59,9 @@ public class MovieColumns implements BaseColumns {
             if (c.equals(POPULARITY) || c.contains("." + POPULARITY)) return true;
             if (c.equals(POSTERPATH) || c.contains("." + POSTERPATH)) return true;
             if (c.equals(DESCRIPTION) || c.contains("." + DESCRIPTION)) return true;
+            if (c.equals(CATEGORY) || c.contains("." + CATEGORY)) return true;
+            if (c.equals(LANGUAGE) || c.contains("." + LANGUAGE)) return true;
+            if (c.equals(ORIGINALTITLE) || c.contains("." + ORIGINALTITLE)) return true;
         }
         return false;
     }

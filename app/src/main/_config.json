@@ -1,8 +1,8 @@
 {
   "syntaxVersion": 3,
   "projectPackageId": "tk.sbarjola.pa.moviedb",
-  "authority": "com.tk.sbarjola.pa.moviedb.app.provider",
-  "providerJavaPackage": "com.tk.sbarjola.pa.moviedb.app.provider",
+  "authority": "tk.sbarjola.pa.moviedb.provider",
+  "providerJavaPackage": "tk.sbarjola.pa.moviedb.provider",
   "providerClassName": "MovieProvider",
   "sqliteOpenHelperClassName": "MovieSQLiteOpenHelper",
   "sqliteOpenHelperCallbacksClassName": "MovieSQLiteOpenHelperCallbacks",

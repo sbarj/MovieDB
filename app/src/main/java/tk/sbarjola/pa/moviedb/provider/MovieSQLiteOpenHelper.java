@@ -29,7 +29,10 @@ public class MovieSQLiteOpenHelper extends SQLiteOpenHelper {
             + MovieColumns.RELEASEDATE + " TEXT, "
             + MovieColumns.POPULARITY + " TEXT, "
             + MovieColumns.POSTERPATH + " TEXT, "
-            + MovieColumns.DESCRIPTION + " TEXT "
+            + MovieColumns.DESCRIPTION + " TEXT, "
+            + MovieColumns.CATEGORY + " TEXT, "
+            + MovieColumns.LANGUAGE + " TEXT, "
+            + MovieColumns.ORIGINALTITLE + " TEXT "
             + " );";
 
     // @formatter:on

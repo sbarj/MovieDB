@@ -20,6 +20,17 @@
     {
       "name": "description",
       "type": "String"
+    },
+    {
+      "name": "category",
+      "type": "String"
+    },
+    {
+      "name": "language",
+      "type": "String"
+    },
+    { "name": "originalTitle",
+      "type": "String"
     }
   ]
 }
