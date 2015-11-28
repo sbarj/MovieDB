@@ -144,6 +144,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 values.putPosterpath(movie.getPosterPath());
                 values.putOriginaltitle(movie.getOriginalTitle());
                 values.putLanguage(movie.getOriginalLanguage());
+                values.putCategory(categoriaPelicula);
                 getContext().getContentResolver().insert(
                         MovieColumns.CONTENT_URI, values.values());
             }
