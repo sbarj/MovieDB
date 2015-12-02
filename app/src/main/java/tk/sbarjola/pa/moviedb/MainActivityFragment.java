@@ -1,6 +1,7 @@
 package tk.sbarjola.pa.moviedb;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -95,6 +96,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         inflater.inflate(R.menu.menu_fragment, menu);
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (OnMovieSelectedListener) context;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -138,7 +146,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             Response<ListResult> response = llamada.execute();
             ListResult resultado = response.body();
 
-            for (Result movie : resultado.getResults()) {    // En este for guardamos en la base de datos
+            // En este for guardamos en la base de datos
+            for (Result movie : resultado.getResults()) {
                 MovieContentValues values = new MovieContentValues();
                 values.putTitle(movie.getTitle());
                 values.putDescription(movie.getOverview());
@@ -315,5 +324,10 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             downloadMovies();
             return null;
         }
+    }
+
+    // Container Activity must implement this interface
+    public interface OnMovieSelectedListener {
+        void onMovieSelected(long id);
     }
 }

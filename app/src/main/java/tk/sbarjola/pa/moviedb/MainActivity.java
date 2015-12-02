@@ -1,5 +1,6 @@
 package tk.sbarjola.pa.moviedb;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -59,4 +61,23 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onMovieSelected(long id) {
+
+        boolean tablet = getResources().getBoolean(R.bool.dos_fragments);
+
+        if (tablet) {
+            DetailsActivtyFragment detailFragment = (DetailsActivtyFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.fragment2);
+            detailFragment.loadMovieFromActivity(id);
+        }
+        else{
+            Intent i = new Intent(this, DetailsActivty.class);
+            i.putExtra("movie_id", id);
+            startActivity(i);
+        }
+    }
+
+
 }

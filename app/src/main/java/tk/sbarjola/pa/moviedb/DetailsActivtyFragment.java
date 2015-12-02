@@ -52,8 +52,9 @@ public class DetailsActivtyFragment extends Fragment {
 
         // Load movie data
         itemId = getActivity().getIntent().getLongExtra("cursor_id", -1);
+
         if(itemId != -1){
-            showDetails();
+            showDetails(fragmentoDetails, itemId);
         }
 
         /*  POR IMPLEMENTAR (REHACER BDD)
@@ -73,7 +74,7 @@ public class DetailsActivtyFragment extends Fragment {
         return fragmentoDetails;
     }
 
-    public void showDetails(){
+    public void showDetails(View view, Long movie_id){
 
         Cursor cursor = getContext().getContentResolver().query(
                 MovieColumns.CONTENT_URI,
@@ -94,5 +95,11 @@ public class DetailsActivtyFragment extends Fragment {
             idioma.setText("Idioma: " + cursor.getString(cursor.getColumnIndex(MovieColumns.LANGUAGE)));
             Picasso.with(getContext()).load(posterUrl + posterSize + cursor.getString(cursor.getColumnIndex(MovieColumns.POSTERPATH)).toString()).fit().into(imagenPoster);
         }
+    }
+
+
+    public void loadMovieFromActivity(Long movie_id) {
+        View view = getView();
+        showDetails(view, movie_id);
     }
 }
