@@ -52,6 +52,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     private ListView listaPeliculas;                // ListView on mostrarem els items
     private GridView gridPeliculas;                 // GridView on mostrarem els items
     private TextView misPeliculas;                  // TextView Auxiliar
+    private OnMovieSelectedListener listener;
 
     // Datos de la API
 

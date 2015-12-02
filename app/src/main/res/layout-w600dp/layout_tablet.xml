@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,18 +10,19 @@
         android:name="tk.sbarjola.pa.moviedb.DetailsActivtyFragment"
         android:id="@+id/fragment3"
         android:layout_gravity="center_horizontal"
-        android:layout_alignParentBot="true"
         android:layout_toEndOf="@+id/fragment2"
         android:layout_toRightOf="@+id/fragment2"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        tools:layout="@layout/fragment_details_activty" />
 
     <fragment
-        android:layout_width="200dp"
+        android:layout_width="170dp"
         android:layout_height="match_parent"
         android:name="tk.sbarjola.pa.moviedb.MainActivityFragment"
         android:id="@+id/fragment2"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentBot="true" />
+        android:layout_alignParentStart="true"
+        tools:layout="@layout/grid_view_layout" />
 </RelativeLayout>
