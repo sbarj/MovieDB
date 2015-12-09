@@ -237,7 +237,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             }
         });
 
-        gridPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {    //Listener para el grid
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
               listener.onMovieSelected(id);
             }

@@ -63,7 +63,7 @@ public class DetailsActivtyFragment extends Fragment {
                 MovieColumns.CONTENT_URI,
                 null,
                 MovieColumns._ID + " = ?",
-                new String[]{String.valueOf(itemId)},
+                new String[]{String.valueOf(movie_id)},
                 null
         );
 

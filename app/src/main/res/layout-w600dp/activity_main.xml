@@ -23,28 +23,31 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior = "@string/appbar_scrolling_view_behavior">
 
         <fragment
             android:id="@+id/fragment2"
             android:name="tk.sbarjola.pa.moviedb.MainActivityFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="400dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            tools:layout="@layout/grid_view_layout" />
+            tools:layout="@layout/grid_view_layout"
+            android:layout_alignParentTop="true" />
 
         <fragment
             android:id="@+id/fragment3"
             android:name="tk.sbarjola.pa.moviedb.DetailsActivtyFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="600dp"
             android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@+id/fragment2"
             android:layout_toRightOf="@+id/fragment2"
             tools:layout="@layout/fragment_details_activty"
-            android:layout_alignTop="@+id/fragment2" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
