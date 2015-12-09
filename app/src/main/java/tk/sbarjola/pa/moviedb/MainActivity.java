@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
         boolean tablet = getResources().getBoolean(R.bool.dos_fragments);
 
-        if (tablet) {
+        if (tablet){
             DetailsActivtyFragment detailFragment = (DetailsActivtyFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.fragment3);
             detailFragment.loadMovieFromActivity(id);

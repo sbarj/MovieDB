@@ -98,13 +98,6 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         inflater.inflate(R.menu.menu_fragment, menu);
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        listener = (OnMovieSelectedListener) context;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -327,6 +320,12 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             downloadMovies();
             return null;
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener = (OnMovieSelectedListener) context;
     }
 
     // Container Activity must implement this interface

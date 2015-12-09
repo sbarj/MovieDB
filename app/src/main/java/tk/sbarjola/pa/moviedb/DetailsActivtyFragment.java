@@ -39,8 +39,6 @@ public class DetailsActivtyFragment extends Fragment {
 
         View fragmentoDetails = inflater.inflate(R.layout.fragment_details_activty, container, false);    //Definimos el fragment
 
-        // Creamos nuestro intent y recogemos los datos que enviamos desde fragment
-
         // Asociamos cada variable a su elemento del layout
         titulo = (TextView) fragmentoDetails.findViewById(R.id.list_titulo);
         puntuacion = (TextView) fragmentoDetails.findViewById(R.id.list_puntuacion);
@@ -51,26 +49,11 @@ public class DetailsActivtyFragment extends Fragment {
         tituloOriginal = (TextView) fragmentoDetails.findViewById(R.id.tituloOriginalDetails);
 
         // Load movie data
-        itemId = getActivity().getIntent().getLongExtra("cursor_id", -1);
+        itemId = getActivity().getIntent().getLongExtra("movie_id", -1);
 
         if(itemId != -1){
             showDetails(fragmentoDetails, itemId);
         }
-
-        /*  POR IMPLEMENTAR (REHACER BDD)
-
-        idioma.setText("Idioma : " + pelicula.getOriginalLanguage());
-        tituloOriginal.setText("(" + pelicula.getOriginalTitle() + ")");
-
-        // Para mostrar si es para adultos o no.
-
-        if(pelicula.getAdult() == true){
-            adultos.setText("Todos los publicos: No.");
-        }
-        else if (pelicula.getAdult() == false){
-            adultos.setText("Todos los publicos: Sí.");
-        }   */
-
         return fragmentoDetails;
     }
 
@@ -96,7 +79,6 @@ public class DetailsActivtyFragment extends Fragment {
             Picasso.with(getContext()).load(posterUrl + posterSize + cursor.getString(cursor.getColumnIndex(MovieColumns.POSTERPATH)).toString()).fit().into(imagenPoster);
         }
     }
-
 
     public void loadMovieFromActivity(Long movie_id) {
         View view = getView();
