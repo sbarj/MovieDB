@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         setSupportActionBar(toolbar);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -69,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
         if (tablet) {
             DetailsActivtyFragment detailFragment = (DetailsActivtyFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.fragment2);
+                    .findFragmentById(R.id.fragment3);
             detailFragment.loadMovieFromActivity(id);
         }
         else{
@@ -78,6 +77,4 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             startActivity(i);
         }
     }
-
-
 }

@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -141,25 +142,30 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     private void procesaResultado(Call<ListResult> llamada, String categoriaPelicula) {
-
         try {
 
             Response<ListResult> response = llamada.execute();
-            ListResult resultado = response.body();
 
-            // En este for guardamos en la base de datos
-            for (Result movie : resultado.getResults()) {
-                MovieContentValues values = new MovieContentValues();
-                values.putTitle(movie.getTitle());
-                values.putDescription(movie.getOverview());
-                values.putReleasedate(movie.getReleaseDate());
-                values.putPopularity(movie.getPopularity().toString());
-                values.putPosterpath(movie.getPosterPath());
-                values.putOriginaltitle(movie.getOriginalTitle());
-                values.putLanguage(movie.getOriginalLanguage());
-                values.putCategory(categoriaPelicula);
-                getContext().getContentResolver().insert(
-                        MovieColumns.CONTENT_URI, values.values());
+            if (response.isSuccess()) {
+                ListResult resultado = response.body();
+
+                // En este for guardamos en la base de datos
+                for (Result movie : resultado.getResults()) {
+                    MovieContentValues values = new MovieContentValues();
+                    values.putTitle(movie.getTitle());
+                    values.putDescription(movie.getOverview());
+                    values.putReleasedate(movie.getReleaseDate());
+                    values.putPopularity(movie.getPopularity().toString());
+                    values.putPosterpath(movie.getPosterPath());
+                    values.putOriginaltitle(movie.getOriginalTitle());
+                    values.putLanguage(movie.getOriginalLanguage());
+                    values.putCategory(categoriaPelicula);
+                    getContext().getContentResolver().insert(
+                            MovieColumns.CONTENT_URI, values.values());
+                }
+
+            } else {
+                Toast.makeText(getContext(), response.errorBody().string(), Toast.LENGTH_LONG).show();
             }
 
         } catch (IOException e) {
@@ -234,17 +240,13 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
 
         listaPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {   //Listener para el list
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(getContext(), DetailsActivty.class);
-                i.putExtra("cursor_id", id);
-                startActivity(i);
+                listener.onMovieSelected(id);
             }
         });
 
         gridPeliculas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  //Listener para el grid
-                Intent i = new Intent(getContext(), DetailsActivty.class);
-                i.putExtra("cursor_id", id);
-                startActivity(i);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+              listener.onMovieSelected(id);
             }
         });
 
